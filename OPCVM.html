@@ -221,79 +221,146 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#0a1628 0
     <div class="progress-label" id="progressLabel">0 / 9 leçons complétées</div>
   </div>
   <div class="path-svg-container">
-    <svg viewBox="0 0 720 430" class="path-svg" id="pathSvg" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 720 500" class="path-svg" id="pathSvg" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="roadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#1d9e75" stop-opacity=".9"/>
-          <stop offset="100%" stop-color="#f5c518" stop-opacity=".9"/>
+        <linearGradient id="roadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1d9e75" stop-opacity="1"/>
+          <stop offset="50%" stop-color="#4db8e8" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#f5c518" stop-opacity="1"/>
         </linearGradient>
-        <filter id="nodeglow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+        <filter id="nodeglow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="pathglow">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
           <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
-      <!-- Road background -->
-      <path d="M55,400 C90,340 130,290 190,265 C250,240 270,215 310,190 C355,163 390,150 440,135 C490,120 530,105 570,85 C610,65 645,55 680,50" 
-        stroke="rgba(255,255,255,0.05)" stroke-width="44" fill="none" stroke-linecap="round"/>
-      <!-- Road dashes -->
-      <path d="M55,400 C90,340 130,290 190,265 C250,240 270,215 310,190 C355,163 390,150 440,135 C490,120 530,105 570,85 C610,65 645,55 680,50" 
-        stroke="rgba(255,255,255,0.04)" stroke-width="2" fill="none" stroke-dasharray="14 22" stroke-linecap="round"/>
-      <!-- Animated progress road -->
-      <path id="roadProgress" d="M55,400 C90,340 130,290 190,265 C250,240 270,215 310,190 C355,163 390,150 440,135 C490,120 530,105 570,85 C610,65 645,55 680,50" 
+
+      <!--
+        S-SHAPE CIRCUIT — 9 nœuds sur un seul chemin continu :
+        Rangée 1 (bas→droite)  : N0(60,440) → N1(210,440) → N2(360,440) → N3(510,440)
+        Virage droite vers haut : N3(510,440) → N3 courbe → N4(510,250)  [côté droit]
+        Rangée 2 (droite→gauche): N4(510,250) → N5(360,250) → N6(210,250) → N7(60,250)
+        Virage gauche vers haut : N7(60,250)  → N7 courbe → N8(60,80)    [côté gauche]
+        Fin avec trophée        : N8(60,80) → direction droite → Trophée(360,80)
+      -->
+
+      <!-- ===== ROUTE FOND (épaisse, sombre) ===== -->
+      <!-- Rangée basse gauche→droite -->
+      <path d="M60,440 L510,440" stroke="rgba(255,255,255,0.06)" stroke-width="36" fill="none" stroke-linecap="round"/>
+      <!-- Virage bas-droite vers milieu-droite -->
+      <path d="M510,440 C570,440 600,410 600,370 C600,330 600,290 600,250 C600,210 570,180 510,180" stroke="rgba(255,255,255,0.06)" stroke-width="36" fill="none" stroke-linecap="round"/>
+      <!-- Rangée milieu droite→gauche -->
+      <path d="M510,250 L60,250" stroke="rgba(255,255,255,0.06)" stroke-width="36" fill="none" stroke-linecap="round"/>
+      <!-- Virage milieu-gauche vers haut-gauche -->
+      <path d="M60,250 C0,250 -30,220 -30,180 C-30,140 -30,110 -30,80 C-30,40 0,20 60,20" stroke="rgba(255,255,255,0.06)" stroke-width="36" fill="none" stroke-linecap="round"/>
+      <!-- Rangée haute gauche→droite vers trophée -->
+      <path d="M60,80 L420,80" stroke="rgba(255,255,255,0.06)" stroke-width="36" fill="none" stroke-linecap="round"/>
+
+      <!-- ===== TIRETS décoratifs ===== -->
+      <path d="M60,440 L510,440" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none" stroke-dasharray="12 20"/>
+      <path d="M510,440 C570,440 600,410 600,370 C600,330 600,290 600,250 C600,210 570,180 510,180" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none" stroke-dasharray="12 20"/>
+      <path d="M510,250 L60,250" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none" stroke-dasharray="12 20"/>
+      <path d="M60,250 C0,250 -30,220 -30,180 C-30,140 -30,110 -30,80 C-30,40 0,20 60,20" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none" stroke-dasharray="12 20"/>
+      <path d="M60,80 L420,80" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none" stroke-dasharray="12 20"/>
+
+      <!-- ===== CHEMIN ANIMÉ (progress) ===== -->
+      <path id="roadAnim"
+        d="M60,440 L510,440 C570,440 600,410 600,370 L600,250 C600,210 570,180 510,180 L60,180 C0,180 -30,150 -30,110 L-30,80 C-30,40 0,20 60,20 L420,20"
         stroke="url(#roadGrad)" stroke-width="5" fill="none" stroke-linecap="round"
-        stroke-dasharray="1100" stroke-dashoffset="1100" id="roadAnim"/>
-      
-      <!-- Nodes - positioned along path -->
+        stroke-dasharray="2200" stroke-dashoffset="2200"
+        style="transition:stroke-dashoffset 3s ease;filter:url(#pathglow)"/>
+
+      <!-- ===== FLÈCHES directionnelles ===== -->
+      <!-- Bas : gauche → droite -->
+      <polygon points="300,432 310,440 300,448" fill="rgba(255,255,255,0.12)"/>
+      <!-- Virage droit : bas → haut -->
+      <polygon points="592,350 600,340 608,350" fill="rgba(255,255,255,0.12)"/>
+      <!-- Milieu : droite → gauche -->
+      <polygon points="280,242 270,250 280,258" fill="rgba(255,255,255,0.12)"/>
+      <!-- Virage gauche : milieu → haut (hors viewBox, on met ailleurs) -->
+      <!-- Haut : gauche → droite -->
+      <polygon points="230,72 240,80 230,88" fill="rgba(255,255,255,0.12)"/>
+
+      <!-- ===== ÉTIQUETTE DÉPART ===== -->
+      <rect x="20" y="458" width="80" height="18" rx="9" fill="rgba(29,158,117,0.25)" stroke="rgba(29,158,117,0.4)" stroke-width="1"/>
+      <text x="60" y="471" text-anchor="middle" fill="#4dd8a0" font-size="9" font-family="Nunito,sans-serif" font-weight="700">DÉPART</text>
+
+      <!-- ===== ÉTIQUETTE FIN / TROPHÉE ===== -->
+      <text x="490" y="58" text-anchor="middle" font-size="28" opacity=".9">🏆</text>
+      <rect x="455" y="95" width="70" height="18" rx="9" fill="rgba(245,197,24,0.2)" stroke="rgba(245,197,24,0.4)" stroke-width="1"/>
+      <text x="490" y="108" text-anchor="middle" fill="#f5c518" font-size="9" font-family="Nunito,sans-serif" font-weight="700">DIPLÔMÉ !</text>
+
+      <!-- ===== NŒUDS ===== -->
+      <!-- N0 — Rangée basse, pos 1 -->
       <g id="pathNode0" class="pnode" onclick="openLesson(0)" style="cursor:pointer">
-        <circle cx="55" cy="400" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="55" y="407" text-anchor="middle" font-size="18">📝</text>
+        <circle cx="60" cy="440" r="28" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="60" y="447" text-anchor="middle" font-size="18">📝</text>
       </g>
+      <!-- N1 — Rangée basse, pos 2 -->
       <g id="pathNode1" class="pnode" onclick="openLesson(1)" style="cursor:pointer">
-        <circle cx="190" cy="265" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="190" y="272" text-anchor="middle" font-size="18">⚖️</text>
+        <circle cx="210" cy="440" r="28" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="210" y="447" text-anchor="middle" font-size="18">⚖️</text>
       </g>
+      <!-- N2 — Rangée basse, pos 3 -->
       <g id="pathNode2" class="pnode" onclick="openLesson(2)" style="cursor:pointer">
-        <circle cx="310" cy="190" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="310" y="197" text-anchor="middle" font-size="18">🗂️</text>
+        <circle cx="360" cy="440" r="28" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="360" y="447" text-anchor="middle" font-size="18">🗂️</text>
       </g>
+      <!-- N3 — Rangée basse, pos 4 (virage droite) -->
       <g id="pathNode3" class="pnode" onclick="openLesson(3)" style="cursor:pointer">
-        <circle cx="440" cy="135" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="440" y="142" text-anchor="middle" font-size="18">⚡</text>
+        <circle cx="510" cy="440" r="28" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="510" y="447" text-anchor="middle" font-size="18">⚡</text>
       </g>
+      <!-- N4 — Rangée milieu, pos 1 (droite, après virage) -->
       <g id="pathNode4" class="pnode" onclick="openLesson(4)" style="cursor:pointer">
-        <circle cx="570" cy="85" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="570" y="92" text-anchor="middle" font-size="18">💰</text>
+        <circle cx="510" cy="250" r="28" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="510" y="257" text-anchor="middle" font-size="18">💰</text>
       </g>
+      <!-- N5 — Rangée milieu, pos 2 -->
       <g id="pathNode5" class="pnode" onclick="openLesson(5)" style="cursor:pointer">
-        <circle cx="680" cy="50" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="680" y="57" text-anchor="middle" font-size="18">📄</text>
+        <circle cx="360" cy="250" r="28" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="360" y="257" text-anchor="middle" font-size="18">📄</text>
       </g>
+      <!-- N6 — Rangée milieu, pos 3 -->
       <g id="pathNode6" class="pnode" onclick="openLesson(6)" style="cursor:pointer">
-        <circle cx="660" cy="190" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="660" y="197" text-anchor="middle" font-size="18">🎯</text>
+        <circle cx="210" cy="250" r="28" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="210" y="257" text-anchor="middle" font-size="18">🎯</text>
       </g>
+      <!-- N7 — Rangée milieu, pos 4 (virage gauche) -->
       <g id="pathNode7" class="pnode" onclick="openLesson(7)" style="cursor:pointer">
-        <circle cx="580" cy="310" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="580" y="317" text-anchor="middle" font-size="18">🏛️</text>
+        <circle cx="60" cy="250" r="28" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="60" y="257" text-anchor="middle" font-size="18">🏛️</text>
       </g>
+      <!-- N8 — Rangée haute, pos 1 (après virage gauche) -->
       <g id="pathNode8" class="pnode" onclick="openLesson(8)" style="cursor:pointer">
-        <circle cx="470" cy="390" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="470" y="397" text-anchor="middle" font-size="18">💳</text>
+        <circle cx="60" cy="80" r="28" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="60" y="87" text-anchor="middle" font-size="18">💳</text>
       </g>
 
-      <!-- Trophy -->
-      <text x="470" y="360" text-anchor="middle" font-size="22" opacity=".25">🏆</text>
+      <!-- ===== LABELS ===== -->
+      <text x="60" y="477" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9.5" font-family="Nunito,sans-serif">Qu'est-ce ?</text>
+      <text x="210" y="477" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9.5" font-family="Nunito,sans-serif">Formes</text>
+      <text x="360" y="477" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9.5" font-family="Nunito,sans-serif">Catégories</text>
+      <text x="510" y="477" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9.5" font-family="Nunito,sans-serif">Risques</text>
+      <text x="510" y="290" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9.5" font-family="Nunito,sans-serif">Val. Liquid.</text>
+      <text x="360" y="290" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9.5" font-family="Nunito,sans-serif">Documents</text>
+      <text x="210" y="290" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9.5" font-family="Nunito,sans-serif">Investir</text>
+      <text x="60" y="290" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9.5" font-family="Nunito,sans-serif">Acteurs</text>
+      <text x="60" y="118" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9.5" font-family="Nunito,sans-serif">Frais</text>
 
-      <!-- Labels -->
-      <text x="55" y="433" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Qu'est-ce ?</text>
-      <text x="190" y="298" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Formes</text>
-      <text x="310" y="223" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Catégories</text>
-      <text x="440" y="168" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Risques</text>
-      <text x="570" y="118" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Val. Liquid.</text>
-      <text x="680" y="30" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Documents</text>
-      <text x="660" y="222" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Investir</text>
-      <text x="580" y="342" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Acteurs</text>
-      <text x="470" y="422" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Frais</text>
+      <!-- Numéros d'étapes -->
+      <text x="60" y="418" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="8" font-family="Nunito,sans-serif">①</text>
+      <text x="210" y="418" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="8" font-family="Nunito,sans-serif">②</text>
+      <text x="360" y="418" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="8" font-family="Nunito,sans-serif">③</text>
+      <text x="510" y="418" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="8" font-family="Nunito,sans-serif">④</text>
+      <text x="510" y="228" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="8" font-family="Nunito,sans-serif">⑤</text>
+      <text x="360" y="228" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="8" font-family="Nunito,sans-serif">⑥</text>
+      <text x="210" y="228" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="8" font-family="Nunito,sans-serif">⑦</text>
+      <text x="60" y="228" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="8" font-family="Nunito,sans-serif">⑧</text>
+      <text x="60" y="58" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="8" font-family="Nunito,sans-serif">⑨</text>
     </svg>
   </div>
   <div class="lessons-grid" id="lessonsGrid"></div>
