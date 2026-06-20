@@ -2,18 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "opcvm-academy.html",
+      "src": "OPCVM.html",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/",
-      "dest": "/opcvm-academy.html"
+      "dest": "/OPCVM.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/opcvm-academy.html"
+      "dest": "/OPCVM.html"
     }
   ]
 }
