@@ -1,19 +1,749 @@
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "OPCVM.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/OPCVM.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/OPCVM.html"
-    }
-  ]
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPCVM Academy — Formation Interactive</title>
+<meta name="description" content="Formation interactive sur les OPCVM — Guide de l'investisseur AMMC">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1a2d5a;--blue:#1e7fd9;--sky:#4db8e8;--yellow:#f5c518;--gold:#e8a800;
+  --teal:#1d9e75;--coral:#D85A30;--white:#fff;--light:#f0f7ff;
+  --gray:#6b7280;--lightgray:#e8edf5;
 }
+html,body{height:100%;overflow-x:hidden}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#0a1628 0%,#1a2d5a 50%,#0e3d6b 100%);min-height:100vh;color:var(--white)}
+
+.screen{display:none;min-height:100vh;padding:20px}
+.screen.active{display:flex;flex-direction:column;align-items:center}
+
+/* ===== HOME ===== */
+#screen-home{background:linear-gradient(135deg,#0a1628 0%,#1a2d5a 50%,#0e3d6b 100%);justify-content:center;position:relative;overflow:hidden}
+.stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:var(--yellow);animation:twinkle 2s infinite alternate}
+@keyframes twinkle{0%{opacity:.2;transform:scale(.8)}100%{opacity:1;transform:scale(1.2)}}
+.home-logo{font-size:64px;margin-bottom:12px;animation:bounce 2s infinite;display:block;text-align:center}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.home-title{font-family:'Poppins',sans-serif;font-size:3.2em;font-weight:900;text-align:center;line-height:1.1;margin-bottom:10px}
+.home-title span{color:var(--yellow)}
+.home-sub{color:#a0c4e8;font-size:1.05em;text-align:center;margin-bottom:16px;max-width:480px;line-height:1.6}
+.home-ammc{display:inline-flex;align-items:center;gap:8px;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.25);border-radius:50px;padding:6px 16px;font-size:.8em;color:var(--yellow);margin-bottom:32px;font-weight:700}
+.btn-start{background:linear-gradient(135deg,var(--yellow),var(--gold));color:var(--navy);font-family:'Poppins',sans-serif;font-weight:800;font-size:1.2em;border:none;border-radius:50px;padding:18px 52px;cursor:pointer;box-shadow:0 8px 32px rgba(245,197,24,.4);transition:all .3s;letter-spacing:.5px}
+.btn-start:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 40px rgba(245,197,24,.6)}
+.home-badges{display:flex;gap:20px;margin-top:36px;flex-wrap:wrap;justify-content:center}
+.hbadge{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 22px;text-align:center;min-width:100px}
+.hbadge strong{display:block;font-size:1.6em;color:var(--yellow);font-weight:900;line-height:1}
+.hbadge span{font-size:.75em;color:#a0c4e8;margin-top:4px;display:block}
+
+.music-btn{position:fixed;top:16px;right:16px;z-index:9999;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:50px;height:50px;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(10px);color:white}
+.music-btn:hover{background:rgba(255,255,255,.2);transform:scale(1.1)}
+
+/* ===== PATH ===== */
+#screen-path{background:linear-gradient(180deg,#060f1f 0%,#0d1f3c 40%,#0a1a35 100%);padding:16px 16px 60px;align-items:stretch}
+.path-header{text-align:center;margin-bottom:24px;width:100%}
+.path-title{font-family:'Poppins',sans-serif;font-size:1.9em;font-weight:800;margin-bottom:4px}
+.path-title span{color:var(--yellow)}
+.path-subtitle{color:#7090b0;font-size:.9em;margin-bottom:14px}
+.progress-bar-wrap{background:rgba(255,255,255,.08);border-radius:50px;height:12px;width:100%;max-width:520px;margin:0 auto 6px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--yellow));border-radius:50px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.progress-label{color:#6080a0;font-size:.8em;text-align:center}
+
+.path-svg-container{width:100%;max-width:720px;margin:0 auto 20px}
+.path-svg{width:100%;height:auto;display:block}
+
+.lessons-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;width:100%;max-width:720px;margin:0 auto}
+.lesson-card{border-radius:16px;padding:15px;cursor:pointer;transition:all .3s;border:2px solid transparent;position:relative;overflow:hidden;min-height:100px}
+.lesson-card.locked{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.06);opacity:.55;cursor:not-allowed}
+.lesson-card.available{background:rgba(29,158,117,.08);border-color:var(--teal);box-shadow:0 4px 20px rgba(29,158,117,.15)}
+.lesson-card.available:hover{transform:translateY(-4px);box-shadow:0 10px 32px rgba(29,158,117,.35)}
+.lesson-card.completed{background:rgba(245,197,24,.06);border-color:rgba(245,197,24,.25)}
+.lesson-card.completed:hover{transform:translateY(-2px)}
+.lesson-card.current{background:rgba(30,127,217,.12);border-color:var(--blue);animation:card-pulse 2.5s infinite alternate}
+@keyframes card-pulse{0%{box-shadow:0 4px 20px rgba(30,127,217,.2)}100%{box-shadow:0 8px 40px rgba(30,127,217,.55)}}
+.lc-icon{font-size:30px;margin-bottom:6px;display:block}
+.lc-num{font-size:.68em;color:#5a7090;font-weight:700;text-transform:uppercase;letter-spacing:1.2px}
+.lc-title{font-weight:700;font-size:.88em;line-height:1.35;margin-top:3px;color:#c8dff0}
+.lc-badge{position:absolute;top:9px;right:9px;font-size:.62em;padding:3px 9px;border-radius:50px;font-weight:800;letter-spacing:.5px}
+.badge-locked{background:rgba(255,255,255,.07);color:#506070}
+.badge-done{background:var(--teal);color:white}
+.badge-new{background:var(--yellow);color:var(--navy)}
+
+/* ===== LESSON ===== */
+#screen-lesson{background:linear-gradient(135deg,#060f1f,#0d1a35);padding:0;overflow:hidden}
+.lesson-topbar{background:rgba(0,0,0,.4);padding:12px 16px;display:flex;align-items:center;gap:12px;width:100%;backdrop-filter:blur(12px);position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,.06)}
+.btn-back{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:white;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:.82em;display:flex;align-items:center;gap:5px;transition:all .3s;font-family:'Nunito',sans-serif;font-weight:700}
+.btn-back:hover{background:rgba(255,255,255,.18)}
+.lesson-topbar-title{font-weight:800;font-size:.95em;flex:1;color:#d0e8ff}
+.lesson-dots{display:flex;gap:7px;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .4s;cursor:pointer}
+.dot.done{background:var(--teal)}
+.dot.active{background:var(--yellow);transform:scale(1.5);box-shadow:0 0 8px rgba(245,197,24,.6)}
+
+.lesson-body{flex:1;overflow-y:auto;width:100%;max-height:calc(100vh - 60px)}
+.lesson-content{padding:20px;width:100%;max-width:780px;margin:0 auto}
+
+.lesson-tabs{display:flex;gap:4px;background:rgba(0,0,0,.35);border-radius:12px;padding:4px;margin-bottom:24px}
+.ltab{flex:1;padding:10px 6px;border:none;background:transparent;color:#6080a0;font-weight:800;font-size:.82em;cursor:pointer;border-radius:9px;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:5px;font-family:'Nunito',sans-serif}
+.ltab.active{background:linear-gradient(135deg,var(--blue),var(--teal));color:white;box-shadow:0 2px 14px rgba(30,127,217,.4)}
+.ltab:hover:not(.active){color:white;background:rgba(255,255,255,.07)}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fade-in .3s ease}
+@keyframes fade-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.theory-block{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;margin-bottom:14px;border-left:4px solid var(--blue)}
+.theory-block.highlight{border-left-color:var(--yellow);background:rgba(245,197,24,.04)}
+.theory-block.green{border-left-color:var(--teal);background:rgba(29,158,117,.04)}
+.theory-block h3{color:var(--yellow);font-size:.93em;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.theory-block.green h3{color:#4dd8a0}
+.theory-block p{color:#a8c4e0;font-size:.87em;line-height:1.75}
+.theory-block ul{list-style:none;margin-top:10px}
+.theory-block ul li{color:#a0bcd8;font-size:.86em;padding:5px 0;display:flex;align-items:flex-start;gap:9px;line-height:1.6}
+.theory-block ul li::before{content:'▸';color:var(--teal);flex-shrink:0;margin-top:2px;font-size:.9em}
+.stat-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.stat-chip{background:rgba(30,127,217,.15);border:1px solid rgba(30,127,217,.25);border-radius:10px;padding:10px 16px;text-align:center;flex:1;min-width:100px}
+.stat-chip strong{display:block;font-size:1.4em;color:var(--yellow);font-weight:900;line-height:1}
+.stat-chip span{font-size:.72em;color:#7090b0;margin-top:2px;display:block}
+
+/* FLIP CARDS */
+.flip-section-title{font-family:'Poppins',sans-serif;font-size:1em;font-weight:700;color:var(--sky);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.flip-hint-bar{background:rgba(30,127,217,.1);border:1px solid rgba(30,127,217,.2);border-radius:8px;padding:8px 14px;font-size:.78em;color:#7090b0;margin-bottom:16px;text-align:center}
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:14px}
+.flip-card{height:165px;cursor:pointer;perspective:1000px;-webkit-tap-highlight-color:transparent}
+.flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.flip-front{background:linear-gradient(135deg,rgba(30,127,217,.18),rgba(29,158,117,.08));border:1px solid rgba(255,255,255,.1)}
+.flip-front .card-emoji{font-size:34px;margin-bottom:9px;line-height:1}
+.flip-front .card-q{font-weight:700;font-size:.87em;color:var(--sky);line-height:1.4}
+.flip-front .flip-hint{font-size:.62em;color:rgba(255,255,255,.3);margin-top:8px}
+.flip-back{background:linear-gradient(135deg,rgba(29,158,117,.22),rgba(30,127,217,.12));border:1px solid rgba(29,158,117,.35);transform:rotateY(180deg)}
+.flip-back .card-a{font-size:.83em;line-height:1.55;color:#b8f0d8;font-weight:600}
+
+/* EXERCISES */
+.exercise-block{background:rgba(245,197,24,.05);border:1px solid rgba(245,197,24,.15);border-radius:14px;padding:18px;margin-bottom:14px}
+.exercise-block h3{color:var(--yellow);font-size:.9em;font-weight:800;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.exercise-block p{color:#9ab0c8;font-size:.86em;line-height:1.65}
+.exercise-hint{font-size:.78em;color:#6080a0;margin-top:6px;font-style:italic}
+.exercise-input{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:9px;padding:11px 15px;color:white;font-size:.9em;font-family:'Nunito',sans-serif;margin-top:10px;outline:none;transition:border-color .3s}
+.exercise-input:focus{border-color:rgba(245,197,24,.5)}
+.exercise-input::placeholder{color:rgba(255,255,255,.25)}
+.btn-check{background:var(--yellow);color:var(--navy);border:none;border-radius:9px;padding:10px 26px;font-weight:800;cursor:pointer;margin-top:10px;transition:all .25s;font-size:.88em;font-family:'Nunito',sans-serif}
+.btn-check:hover{background:var(--gold);transform:translateY(-1px)}
+.exercise-result{margin-top:10px;padding:10px 14px;border-radius:9px;font-size:.84em;display:none;line-height:1.5}
+.exercise-result.show{display:block}
+.exercise-result.ok{background:rgba(29,158,117,.13);border:1px solid rgba(29,158,117,.28);color:#90e8c0}
+.exercise-result.nok{background:rgba(216,90,48,.1);border:1px solid rgba(216,90,48,.22);color:#f0b8a0}
+
+/* QUIZ */
+.quiz-container{padding:4px 0}
+.quiz-q-num{color:#5080a0;font-size:.75em;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px}
+.quiz-question{font-family:'Poppins',sans-serif;font-size:1.25em;font-weight:700;margin-bottom:24px;line-height:1.45;color:#d8eeff}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-opt{background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 18px;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:13px;font-size:.9em;font-weight:700;text-align:left;color:#b0cce0;font-family:'Nunito',sans-serif;width:100%}
+.quiz-opt:hover:not(:disabled){background:rgba(30,127,217,.13);border-color:rgba(30,127,217,.5);color:white;transform:translateX(5px)}
+.quiz-opt.correct{background:rgba(29,158,117,.18);border-color:var(--teal);color:#90e8c0}
+.quiz-opt.wrong{background:rgba(216,90,48,.15);border-color:var(--coral);color:#f0b8a0}
+.quiz-opt.revealed{opacity:.38}
+.opt-letter{width:34px;height:34px;min-width:34px;border-radius:50%;background:rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.82em;transition:all .3s}
+.correct .opt-letter{background:var(--teal)}
+.wrong .opt-letter{background:var(--coral)}
+.quiz-feedback{margin-top:18px;padding:14px 18px;border-radius:12px;font-size:.88em;line-height:1.6}
+.quiz-feedback.correct{background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.25);color:#90e8c0}
+.quiz-feedback.wrong{background:rgba(216,90,48,.09);border:1px solid rgba(216,90,48,.22);color:#f0b8a0}
+.btn-next{background:linear-gradient(135deg,var(--blue),var(--teal));color:white;border:none;border-radius:50px;padding:12px 36px;font-size:.95em;font-weight:800;cursor:pointer;margin-top:20px;display:inline-block;transition:all .3s;font-family:'Nunito',sans-serif}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(30,127,217,.4)}
+
+/* RESULT */
+.result-wrap{text-align:center;padding:40px 20px 60px;width:100%;max-width:600px;margin:0 auto}
+.result-trophy{font-size:90px;margin-bottom:16px;animation:trophy-in 1s ease-out;display:block;line-height:1}
+@keyframes trophy-in{0%{transform:scale(0) rotate(-25deg);opacity:0}60%{transform:scale(1.25) rotate(8deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.result-score{font-size:3.5em;font-weight:900;color:var(--yellow);font-family:'Poppins',sans-serif;line-height:1}
+.result-pct{color:#6080a0;font-size:.9em;margin-top:4px}
+.result-stars{font-size:2.2em;margin:18px 0 8px;letter-spacing:5px}
+.result-msg{font-size:1.05em;color:#a0c0d8;line-height:1.65;margin-bottom:32px}
+.result-unlock{background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.25);border-radius:12px;padding:14px 20px;font-size:.9em;color:var(--yellow);font-weight:700;margin-bottom:24px}
+.result-btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.btn-continue{background:linear-gradient(135deg,var(--yellow),var(--gold));color:var(--navy);border:none;border-radius:50px;padding:15px 44px;font-size:1.05em;font-weight:900;cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif}
+.btn-continue:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(245,197,24,.5)}
+.btn-secondary{background:rgba(255,255,255,.08);color:white;border:1px solid rgba(255,255,255,.18);border-radius:50px;padding:13px 28px;font-size:.92em;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif}
+.btn-secondary:hover{background:rgba(255,255,255,.16)}
+
+/* CONFETTI */
+.confetti-piece{position:fixed;pointer-events:none;z-index:99999;animation:conffall linear forwards}
+@keyframes conffall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:10px}
+
+@media(max-width:520px){
+  .home-title{font-size:2.2em}
+  .flip-grid{grid-template-columns:1fr 1fr}
+  .flip-card{height:145px}
+  .quiz-question{font-size:1.05em}
+  .lessons-grid{grid-template-columns:1fr 1fr}
+  .result-score{font-size:2.5em}
+}
+</style>
+</head>
+<body>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Musique de fond">🎵</button>
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <div class="stars" id="stars"></div>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:40px 20px;max-width:600px;width:100%">
+    <span class="home-logo">📊</span>
+    <h1 class="home-title">OPCVM<br><span>Academy</span></h1>
+    <p class="home-sub">Formation interactive sur les Organismes de Placement Collectif en Valeurs Mobilières</p>
+    <div class="home-ammc">🏛️ Guide officiel AMMC — Autorité Marocaine du Marché des Capitaux</div>
+    <button class="btn-start" onclick="goToPath()">Commencer le parcours 🚀</button>
+    <div class="home-badges">
+      <div class="hbadge"><strong>9</strong><span>Leçons</span></div>
+      <div class="hbadge"><strong>45+</strong><span>Flashcards</span></div>
+      <div class="hbadge"><strong>36</strong><span>Quiz Q&amp;A</span></div>
+      <div class="hbadge"><strong>18</strong><span>Exercices</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PATH -->
+<div id="screen-path" class="screen">
+  <div class="path-header">
+    <h2 class="path-title">Votre <span>parcours</span> d'apprentissage</h2>
+    <p class="path-subtitle">Validez chaque leçon pour débloquer la suivante</p>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 9 leçons complétées</div>
+  </div>
+  <div class="path-svg-container">
+    <svg viewBox="0 0 720 430" class="path-svg" id="pathSvg" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="roadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1d9e75" stop-opacity=".9"/>
+          <stop offset="100%" stop-color="#f5c518" stop-opacity=".9"/>
+        </linearGradient>
+        <filter id="nodeglow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Road background -->
+      <path d="M55,400 C90,340 130,290 190,265 C250,240 270,215 310,190 C355,163 390,150 440,135 C490,120 530,105 570,85 C610,65 645,55 680,50" 
+        stroke="rgba(255,255,255,0.05)" stroke-width="44" fill="none" stroke-linecap="round"/>
+      <!-- Road dashes -->
+      <path d="M55,400 C90,340 130,290 190,265 C250,240 270,215 310,190 C355,163 390,150 440,135 C490,120 530,105 570,85 C610,65 645,55 680,50" 
+        stroke="rgba(255,255,255,0.04)" stroke-width="2" fill="none" stroke-dasharray="14 22" stroke-linecap="round"/>
+      <!-- Animated progress road -->
+      <path id="roadProgress" d="M55,400 C90,340 130,290 190,265 C250,240 270,215 310,190 C355,163 390,150 440,135 C490,120 530,105 570,85 C610,65 645,55 680,50" 
+        stroke="url(#roadGrad)" stroke-width="5" fill="none" stroke-linecap="round"
+        stroke-dasharray="1100" stroke-dashoffset="1100" id="roadAnim"/>
+      
+      <!-- Nodes - positioned along path -->
+      <g id="pathNode0" class="pnode" onclick="openLesson(0)" style="cursor:pointer">
+        <circle cx="55" cy="400" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="55" y="407" text-anchor="middle" font-size="18">📝</text>
+      </g>
+      <g id="pathNode1" class="pnode" onclick="openLesson(1)" style="cursor:pointer">
+        <circle cx="190" cy="265" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="190" y="272" text-anchor="middle" font-size="18">⚖️</text>
+      </g>
+      <g id="pathNode2" class="pnode" onclick="openLesson(2)" style="cursor:pointer">
+        <circle cx="310" cy="190" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="310" y="197" text-anchor="middle" font-size="18">🗂️</text>
+      </g>
+      <g id="pathNode3" class="pnode" onclick="openLesson(3)" style="cursor:pointer">
+        <circle cx="440" cy="135" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="440" y="142" text-anchor="middle" font-size="18">⚡</text>
+      </g>
+      <g id="pathNode4" class="pnode" onclick="openLesson(4)" style="cursor:pointer">
+        <circle cx="570" cy="85" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="570" y="92" text-anchor="middle" font-size="18">💰</text>
+      </g>
+      <g id="pathNode5" class="pnode" onclick="openLesson(5)" style="cursor:pointer">
+        <circle cx="680" cy="50" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="680" y="57" text-anchor="middle" font-size="18">📄</text>
+      </g>
+      <g id="pathNode6" class="pnode" onclick="openLesson(6)" style="cursor:pointer">
+        <circle cx="660" cy="190" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="660" y="197" text-anchor="middle" font-size="18">🎯</text>
+      </g>
+      <g id="pathNode7" class="pnode" onclick="openLesson(7)" style="cursor:pointer">
+        <circle cx="580" cy="310" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="580" y="317" text-anchor="middle" font-size="18">🏛️</text>
+      </g>
+      <g id="pathNode8" class="pnode" onclick="openLesson(8)" style="cursor:pointer">
+        <circle cx="470" cy="390" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="470" y="397" text-anchor="middle" font-size="18">💳</text>
+      </g>
+
+      <!-- Trophy -->
+      <text x="470" y="360" text-anchor="middle" font-size="22" opacity=".25">🏆</text>
+
+      <!-- Labels -->
+      <text x="55" y="433" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Qu'est-ce ?</text>
+      <text x="190" y="298" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Formes</text>
+      <text x="310" y="223" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Catégories</text>
+      <text x="440" y="168" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Risques</text>
+      <text x="570" y="118" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Val. Liquid.</text>
+      <text x="680" y="30" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Documents</text>
+      <text x="660" y="222" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Investir</text>
+      <text x="580" y="342" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Acteurs</text>
+      <text x="470" y="422" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Nunito,sans-serif">Frais</text>
+    </svg>
+  </div>
+  <div class="lessons-grid" id="lessonsGrid"></div>
+</div>
+
+<!-- LESSON -->
+<div id="screen-lesson" class="screen">
+  <div class="lesson-topbar">
+    <button class="btn-back" onclick="backToPath()">← Retour</button>
+    <div class="lesson-topbar-title" id="lessonTopTitle"></div>
+    <div class="lesson-dots" id="lessonDots"></div>
+  </div>
+  <div class="lesson-body"><div class="lesson-content" id="lessonContent"></div></div>
+</div>
+
+<script>
+// ===== DATA =====
+const LESSONS = [
+{id:0,title:"Qu'est-ce qu'un OPCVM ?",icon:"📝",
+theory:[
+{t:"Définition",i:"💡",h:false,p:"Un OPCVM (Organisme de Placement Collectif en Valeurs Mobilières) est un fonds dédié à la gestion et à l'investissement des fonds collectés auprès d'investisseurs de toutes natures : personnes physiques, entreprises, etc.",l:null},
+{t:"Fonctionnement",i:"⚙️",h:false,p:"Les sociétés de gestion mettent en commun les sommes collectées pour constituer des portefeuilles diversifiés d'instruments financiers. Une part ou action d'OPCVM représente une fraction de ce portefeuille.",l:["Actions cotées en bourse","Obligations (État ou entreprises)","Bons du trésor","Liquidités"]},
+{t:"Chiffres clés fin 2023",i:"📊",h:true,p:"Le marché marocain des OPCVM en quelques chiffres :",l:null,stats:[["577","OPCVM actifs"],["19","Sociétés de gestion"],["560 Mds","MAD actif net"]]},
+{t:"Votre rôle d'investisseur",i:"👤",h:false,p:"En investissant dans un OPCVM, vous confiez votre épargne à des professionnels de la gestion de portefeuille. Vous avez ainsi accès au marché des capitaux dans son ensemble, avec les mêmes conditions qu'un grand investisseur.",l:null},
+],
+cards:[
+{q:"Que signifie OPCVM ?",a:"Organisme de Placement Collectif en Valeurs Mobilières",e:"🔤"},
+{q:"Quel est l'objectif d'un OPCVM ?",a:"Gérer et investir les fonds collectés auprès d'investisseurs de toutes natures (particuliers, entreprises…)",e:"🎯"},
+{q:"Que représente une part d'OPCVM ?",a:"Une fraction du portefeuille diversifié constitué par la société de gestion",e:"📦"},
+{q:"Combien d'OPCVM en 2023 ?",a:"577 OPCVM gérés par 19 sociétés de gestion",e:"📈"},
+{q:"Quel est l'actif net total ?",a:"560 milliards de dirhams à fin 2023",e:"💰"},
+],
+quiz:[
+{q:"Que signifie l'acronyme OPCVM ?",o:["Organisme de Placement Collectif en Valeurs Mobilières","Organisation de Participation Capital et Valeurs Marchandes","Opération de Placement et de Cession en Valeurs Multiples","Organisme de Prêt Collectif en Valeurs Monétaires"],c:0,e:"OPCVM signifie Organisme de Placement Collectif en Valeurs Mobilières."},
+{q:"Combien de sociétés de gestion existent au Maroc à fin 2023 ?",o:["9","15","19","25"],c:2,e:"À fin 2023, 577 OPCVM sont gérés par 19 sociétés de gestion."},
+{q:"Quel est l'actif net total des OPCVM marocains à fin 2023 ?",o:["280 milliards MAD","420 milliards MAD","560 milliards MAD","700 milliards MAD"],c:2,e:"L'actif net total atteint 560 milliards de dirhams à fin 2023."},
+{q:"À qui confiez-vous votre épargne en investissant dans un OPCVM ?",o:["À la Bourse directement","À des professionnels de la gestion de portefeuille","À l'État marocain","À des banques uniquement"],c:1,e:"Vous confiez votre épargne à des professionnels de la gestion de portefeuille d'instruments financiers."},
+],
+exs:[
+{q:"Un OPCVM collecte 10 millions MAD auprès de 100 investisseurs égaux. Quelle est la mise de chaque investisseur ?",h:"10 000 000 ÷ 100 =",a:"100000",u:"MAD",t:0},
+{q:"Nommez 3 types d'instruments dans lesquels un OPCVM peut investir :",h:null,a:null,s:"Actions cotées, Obligations, Bons du trésor"},
+]},
+{id:1,title:"Formes juridiques",icon:"⚖️",
+theory:[
+{t:"Deux formes juridiques",i:"⚖️",h:false,p:"Les OPCVM peuvent prendre deux formes juridiques : les SICAV (Sociétés d'Investissement à Capital Variable) et les FCP (Fonds Communs de Placement). Chacune a des caractéristiques distinctes.",l:null},
+{t:"La SICAV",i:"🏢",h:false,p:"Société anonyme dont l'objectif unique est la gestion d'un portefeuille de valeurs mobilières et de liquidités.",l:["Personnalité morale propre","Investisseurs = actionnaires","Participation aux Assemblées Générales","Peut gérer elle-même ou déléguer à une société de gestion"]},
+{t:"Le FCP",i:"🤝",h:true,p:"Copropriété de valeurs mobilières et de liquidités dépourvue de personnalité morale. La gestion est assurée par une société de gestion.",l:["Pas de personnalité morale","Investisseurs = porteurs de parts","Forme la plus répandue : +90% des OPCVM"]},
+],
+cards:[
+{q:"Qu'est-ce qu'une SICAV ?",a:"Société d'Investissement à Capital Variable — société anonyme gérant un portefeuille de valeurs mobilières. Les investisseurs sont actionnaires.",e:"🏢"},
+{q:"Qu'est-ce qu'un FCP ?",a:"Fonds Commun de Placement — copropriété de valeurs mobilières dépourvue de personnalité morale. La gestion est déléguée à une société de gestion.",e:"🤝"},
+{q:"Quel statut a l'investisseur dans une SICAV ?",a:"Actionnaire, avec droit de participation aux Assemblées Générales",e:"🗳️"},
+{q:"Quel statut a l'investisseur dans un FCP ?",a:"Porteur de parts de la copropriété",e:"📋"},
+{q:"Quelle forme domine les OPCVM marocains ?",a:"Les FCP représentent plus de 90% des 577 OPCVM à fin 2023",e:"📊"},
+],
+quiz:[
+{q:"Quelle est la forme juridique majoritaire des OPCVM au Maroc ?",o:["SICAV","FCP","SA","SARL"],c:1,e:"À fin 2023, plus de 90% des 577 OPCVM sont des FCP."},
+{q:"Dans une SICAV, quel est le statut de l'investisseur ?",o:["Porteur de parts","Actionnaire","Associé","Créancier"],c:1,e:"Les investisseurs dans une SICAV ont le statut d'actionnaires."},
+{q:"Le FCP possède-t-il une personnalité morale ?",o:["Oui, toujours","Non","Partiellement","Seulement si agréé"],c:1,e:"Le FCP est une copropriété dépourvue de personnalité morale."},
+{q:"La SICAV peut-elle gérer ses propres investissements ?",o:["Jamais","Uniquement pour certaines catégories","Oui, ou déléguer à une société de gestion","Non, toujours déléguée"],c:2,e:"La SICAV peut s'occuper elle-même de la gestion ou bien déléguer cette responsabilité à une société de gestion."},
+],
+exs:[
+{q:"Complétez : Dans un FCP, les investisseurs sont appelés _______ (porteurs de parts ou actionnaires) ?",h:null,a:null,s:"Porteurs de parts"},
+{q:"Sur 577 OPCVM où 90% sont des FCP, combien y a-t-il de SICAV environ ?",h:"577 × 10% ≈",a:"58",u:"SICAV",t:5},
+]},
+{id:2,title:"Catégories d'OPCVM",icon:"🗂️",
+theory:[
+{t:"5 catégories distinctes",i:"🗂️",h:false,p:"Les OPCVM se déclinent en cinq catégories distinctes, chacune présentant des caractéristiques et des stratégies d'investissement spécifiques adaptées à différents profils d'investisseurs.",l:null},
+{t:"OPCVM Actions",i:"📈",h:false,p:"Investissent principalement en actions cotées en Bourse. Plus risqués car soumis à la volatilité boursière, mais potentiellement plus rémunérateurs sur le long terme. Risque principal : risque de marché.",l:null},
+{t:"OPCVM Obligations",i:"📜",h:false,p:"Investissent principalement en obligations émises par l'État ou des entreprises. Divisés en deux sous-catégories :",l:["Court Terme (CT) : échéances rapprochées, sensibilité 0,5 < S ≤ 1,1","Moyen et Long Terme (MLT) : périodes plus étendues, sensibilité > 1,1"]},
+{t:"OPCVM Monétaires",i:"💵",h:false,p:"Investissent sur le marché monétaire à court terme via des placements de maturité courte voire très courte. Considérés comme les moins risqués mais à rendement plus faible. Sensibilité ≤ 0,5.",l:null},
+{t:"OPCVM Diversifiés & Contractuels",i:"🎨",h:true,p:"Diversifiés : combinent actions, obligations et liquidités de manière discrétionnaire. Contractuels : s'engagent à offrir à une date déterminée un résultat concret en termes de performance et/ou de garantie du capital.",l:null},
+],
+cards:[
+{q:"Quels actifs composent un OPCVM Actions ?",a:"Principalement des actions cotées en Bourse — plus risqué mais potentiellement plus rentable sur le long terme",e:"📈"},
+{q:"Que sont les OPCVM Obligations CT et MLT ?",a:"Court Terme pour des échéances rapprochées (S ≤ 1,1), Moyen et Long Terme pour des périodes plus étendues (S > 1,1)",e:"📜"},
+{q:"Quelle catégorie est la moins risquée ?",a:"Les OPCVM Monétaires — investissements à court terme sur le marché monétaire, sensibilité ≤ 0,5",e:"🔒"},
+{q:"Qu'est-ce qu'un OPCVM Diversifié ?",a:"Un fonds combinant actions, obligations et liquidités de manière discrétionnaire, sans appartenir à une catégorie unique",e:"🎨"},
+{q:"Qu'est-ce qu'un OPCVM Contractuel ?",a:"Il s'engage à offrir un résultat concret (performance et/ou garantie du capital) à une date déterminée",e:"📋"},
+],
+quiz:[
+{q:"Combien de catégories d'OPCVM existent au Maroc ?",o:["3","4","5","6"],c:2,e:"Il existe 5 catégories : Actions, Obligations, Monétaires, Diversifiés et Contractuels."},
+{q:"Quelle catégorie offre une garantie du capital à une date déterminée ?",o:["Actions","Obligations","Monétaires","Contractuels"],c:3,e:"Les OPCVM Contractuels s'engagent à offrir un résultat concret en termes de performance et/ou de garantie du capital."},
+{q:"Les OPCVM Diversifiés peuvent investir dans :",o:["Actions uniquement","Obligations uniquement","Actions, obligations et instruments monétaires","Immobilier et actions"],c:2,e:"Les OPCVM Diversifiés combinent différentes classes d'actifs : actions, obligations et monétaires."},
+{q:"Les OPCVM Obligations se divisent en :",o:["Court terme et long terme seulement","CT et MLT","Privé et public","National et international"],c:1,e:"Les OPCVM Obligations se subdivisent en Court Terme (CT) et Moyen et Long Terme (MLT)."},
+],
+exs:[
+{q:"Associez chaque catégorie à son niveau de risque (du moins au plus risqué) :",h:null,a:null,s:"Monétaire < Obligations CT < Obligations MLT < Diversifié < Actions"},
+{q:"Un OPCVM s'engage à rembourser votre capital à 5 ans. De quelle catégorie s'agit-il ?",h:null,a:null,s:"OPCVM Contractuel"},
+]},
+{id:3,title:"Risques et Rendements",icon:"⚡",
+theory:[
+{t:"Le couple risque-rendement",i:"⚡",h:false,p:"La relation risque-rendement repose sur le principe fondamental : plus un placement est risqué, plus son potentiel de rendement est élevé. Et inversement, un placement sûr offre généralement un rendement plus modeste.",l:null},
+{t:"Risque de marché",i:"📉",h:false,p:"Les performances des OPCVM dépendent de l'évolution des marchés financiers. La valeur des actifs peut varier en fonction des conditions économiques ou d'autres facteurs influençant les marchés.",l:null},
+{t:"Risque de taux",i:"📊",h:false,p:"Les fluctuations des taux d'intérêt peuvent affecter la valeur des titres à revenu fixe. Une hausse des taux entraîne une baisse de la valeur de ces titres. Ce risque est mesuré par la sensibilité.",l:null},
+{t:"Risque de crédit",i:"⚠️",h:false,p:"Risque que les émetteurs des titres détenus dans le portefeuille de l'OPCVM ne puissent pas honorer leurs obligations : remboursement du capital ou paiement des intérêts.",l:null},
+{t:"La Sensibilité",i:"📐",h:true,p:"Indicateur mesurant la relation entre la valeur de l'OPCVM et la variation des taux d'intérêt. Exemple : sensibilité = 2 → hausse des taux de 1% → baisse de la VL de 2%.",l:["OPCVM Monétaire : S ≤ 0,5","OPCVM Obligations CT : 0,5 < S ≤ 1,1","OPCVM Obligations MLT : S > 1,1"]},
+],
+cards:[
+{q:"Quel est le principe du couple risque-rendement ?",a:"Plus un placement est risqué, plus son potentiel de rendement est élevé — et inversement",e:"⚡"},
+{q:"Qu'est-ce que le risque de marché ?",a:"Le risque que la valeur des actifs varie selon l'évolution des marchés financiers et des conditions économiques",e:"📉"},
+{q:"Qu'est-ce que le risque de taux ?",a:"Le risque que les fluctuations des taux d'intérêt affectent la valeur des titres à revenu fixe détenus",e:"📊"},
+{q:"Qu'est-ce que la sensibilité d'un OPCVM ?",a:"Indicateur mesurant la relation entre la valeur de l'OPCVM et la variation des taux d'intérêt",e:"📐"},
+{q:"Quelle catégorie est la plus risquée ?",a:"Les OPCVM Actions — en raison de la volatilité des marchés boursiers à court terme",e:"🔥"},
+],
+quiz:[
+{q:"Une sensibilité de 2 signifie que si les taux augmentent de 1%, la valeur liquidative :",o:["Augmente de 2%","Baisse de 2%","Reste stable","Augmente de 1%"],c:1,e:"Sensibilité de 2 → hausse des taux de 1% → baisse de la VL de 2%."},
+{q:"Quelle est la sensibilité maximale d'un OPCVM Monétaire ?",o:["0,5","1,1","1,5","2"],c:0,e:"La sensibilité d'un OPCVM Monétaire doit être ≤ 0,5 selon la réglementation."},
+{q:"Quel OPCVM offre généralement le rendement le plus élevé sur le long terme ?",o:["Monétaire","Obligations CT","Diversifié","Actions"],c:3,e:"Sur le long terme, les OPCVM Actions offrent des rendements plus élevés, en contrepartie d'un risque plus important."},
+{q:"Le risque de crédit concerne :",o:["La volatilité du marché boursier","L'incapacité des émetteurs à honorer leurs obligations","Les variations des taux de change","La liquidité des titres"],c:1,e:"Le risque de crédit est lié à l'incapacité des émetteurs des titres à honorer leurs obligations (capital ou intérêts)."},
+],
+exs:[
+{q:"Si la sensibilité d'un OPCVM est de 3 et les taux augmentent de 0,5%, de combien baisse la valeur liquidative ?",h:"3 × 0,5 =",a:"1.5",u:"%",t:0.1},
+{q:"Classez de moins risqué à plus risqué : Actions, Monétaire, Obligations MLT, Obligations CT",h:null,a:null,s:"Monétaire < Obligations CT < Obligations MLT < Actions"},
+]},
+{id:4,title:"Valeur Liquidative",icon:"💰",
+theory:[
+{t:"Définition de la VL",i:"💰",h:false,p:"La valeur liquidative correspond à la valeur de la part d'un FCP ou de l'action d'une SICAV. Les souscriptions et rachats sont effectués à ce prix, majoré ou minoré des commissions.",l:["Formule : Actif Net ÷ Nombre de parts ou d'actions émises"]},
+{t:"Fréquence de calcul",i:"📅",h:false,p:"La valeur liquidative est calculée par la société de gestion à une fréquence au moins hebdomadaire (chaque vendredi). Elle doit être publiée le premier jour ouvrable qui suit son calcul.",l:null},
+{t:"Obligations de publication",i:"📰",h:true,p:"La société de gestion est tenue d'afficher et publier la VL :",l:["Dans ses locaux et aux guichets des établissements de souscription/rachat","Dans un journal d'annonces légales au moins une fois par semaine","Accompagnée du prix de souscription et de rachat"]},
+{t:"Prix d'exécution inconnu",i:"❓",h:false,p:"Les opérations d'achat ou de vente d'actions ou de parts d'OPCVM se réalisent à un prix inconnu avant leur exécution. Ce prix est déterminé par la prochaine valeur liquidative affichée.",l:null},
+],
+cards:[
+{q:"Comment calcule-t-on la valeur liquidative ?",a:"Actif Net ÷ Nombre de parts ou d'actions émises",e:"🧮"},
+{q:"À quelle fréquence minimum est calculée la VL ?",a:"Au moins hebdomadaire (chaque vendredi)",e:"📅"},
+{q:"Quand doit être publiée la valeur liquidative ?",a:"Le premier jour ouvrable qui suit son calcul, dans un journal d'annonces légales",e:"📰"},
+{q:"Que reflète l'évolution de la valeur liquidative ?",a:"La performance de l'OPCVM sur une période donnée",e:"📈"},
+{q:"À quel prix s'exécutent les ordres d'achat/vente ?",a:"À un prix inconnu avant exécution — déterminé par la prochaine VL affichée",e:"❓"},
+],
+quiz:[
+{q:"La valeur liquidative est calculée à quelle fréquence minimum ?",o:["Quotidienne","Hebdomadaire","Mensuelle","Trimestrielle"],c:1,e:"La valeur liquidative est calculée au moins hebdomadairement (chaque vendredi)."},
+{q:"Si l'actif net est de 5 000 000 MAD et il y a 50 000 parts, quelle est la VL ?",o:["10 MAD","100 MAD","1 000 MAD","500 MAD"],c:1,e:"VL = Actif Net ÷ Nombre de parts = 5 000 000 ÷ 50 000 = 100 MAD."},
+{q:"Où doit être publiée la valeur liquidative ?",o:["Seulement sur internet","Dans un journal d'annonces légales","À la Bourse uniquement","À la banque centrale"],c:1,e:"La VL doit être publiée dans un journal d'annonces légales au moins une fois par semaine."},
+{q:"Peut-on connaître le prix d'exécution d'un ordre avant de le passer ?",o:["Oui, toujours","Non, le prix est inconnu avant exécution","Oui si la VL est stable","Non, sauf pour les SICAV"],c:1,e:"Les opérations d'achat ou de vente se réalisent à un prix inconnu avant leur exécution."},
+],
+exs:[
+{q:"Un OPCVM a un actif net de 50 000 000 MAD et 500 000 parts. Calculez la valeur liquidative :",h:"50 000 000 ÷ 500 000 =",a:"100",u:"MAD",t:0},
+{q:"Si la VL passe de 100 MAD à 112 MAD, quelle est la performance en % ?",h:"(112 - 100) ÷ 100 × 100 =",a:"12",u:"%",t:0},
+]},
+{id:5,title:"Documents d'information",icon:"📄",
+theory:[
+{t:"Trois documents clés",i:"📄",h:false,p:"L'entrée en activité d'un OPCVM nécessite l'établissement de documents essentiels avant toute commercialisation de parts ou actions au grand public.",l:null},
+{t:"Statuts / Règlement de gestion",i:"📜",h:false,p:"Document comprenant l'ensemble des dispositions relatives au fonctionnement de l'OPCVM ainsi que le rôle et la responsabilité des différents intervenants.",l:["Pour les SICAV : Statuts","Pour les FCP : Règlement de gestion","Fait l'objet d'un agrément de l'AMMC"]},
+{t:"La note d'information",i:"📋",h:true,p:"Soumise au visa de l'AMMC avant la première émission de parts. Donne une information claire et exacte permettant de prendre une décision d'investissement éclairée.",l:["Descriptif technique de l'OPCVM","Modalités de fonctionnement et d'investissement","Principales caractéristiques de l'instrument financier"]},
+{t:"La fiche signalétique",i:"🔖",h:false,p:"Extrait synthétique de la note d'information visée par l'AMMC. Remise avant la première souscription, elle récapitule de manière claire les principales caractéristiques de l'OPCVM.",l:null},
+],
+cards:[
+{q:"Quel document régit le fonctionnement d'une SICAV ?",a:"Les Statuts — agréés par l'AMMC",e:"🏛️"},
+{q:"Quel document régit le fonctionnement d'un FCP ?",a:"Le Règlement de gestion — agréé par l'AMMC",e:"📜"},
+{q:"Qu'est-ce que la note d'information ?",a:"Document soumis au visa de l'AMMC avant la première émission, donnant une information claire sur l'OPCVM pour une décision éclairée",e:"📋"},
+{q:"Qu'est-ce que la fiche signalétique ?",a:"Un extrait synthétique de la note d'information, remis obligatoirement avant la première souscription",e:"🔖"},
+{q:"Quel organisme délivre le visa sur la note d'information ?",a:"L'AMMC — Autorité Marocaine du Marché des Capitaux",e:"✅"},
+],
+quiz:[
+{q:"Quel document doit recevoir le visa de l'AMMC avant la première émission de parts ?",o:["Les statuts","La note d'information","La fiche signalétique","Le rapport annuel"],c:1,e:"Tout OPCVM est tenu de soumettre au visa de l'AMMC une note d'information avant la première émission."},
+{q:"La fiche signalétique est :",o:["Un document indépendant","Un extrait de la note d'information","Un rapport annuel","Un contrat de souscription"],c:1,e:"La fiche signalétique est un extrait de la note d'information visée par l'AMMC."},
+{q:"Quel document est spécifique aux FCP ?",o:["Les statuts","Le prospectus","Le règlement de gestion","La fiche signalétique"],c:2,e:"Pour un FCP, c'est le règlement de gestion qui encadre son fonctionnement."},
+{q:"Quand la fiche signalétique est-elle remise à l'investisseur ?",o:["Après la souscription","Avant la première souscription","Annuellement","Seulement sur demande"],c:1,e:"La fiche signalétique est remise avant la première souscription."},
+],
+exs:[
+{q:"Citez les 3 documents essentiels d'un OPCVM :",h:null,a:null,s:"Statuts/Règlement de gestion, Note d'information, Fiche signalétique"},
+{q:"Quelle est la différence entre la note d'information et la fiche signalétique ?",h:null,a:null,s:"La fiche signalétique est un extrait synthétique de la note d'information, plus concis et remis avant souscription"},
+]},
+{id:6,title:"Investir en OPCVM",icon:"🎯",
+theory:[
+{t:"Avantages des OPCVM",i:"✅",h:false,p:"Les OPCVM présentent de nombreux avantages pour les investisseurs :",l:["Accès à une diversité d'instruments financiers","Gestion professionnelle par des experts","Large réseau de distribution","Prix d'entrée accessible et modéré"]},
+{t:"Étapes 1 & 2 : Profil et présélection",i:"1️⃣",h:false,p:"Définissez votre profil d'investisseur en répondant à trois questions clés :",l:["Quel est votre objectif de placement ? (revenus, valorisation...)", "Quel est votre horizon de placement ? (CT, MT, LT)","Quelle est votre tolérance au risque ?"]},
+{t:"Étape 3 : Comparer",i:"3️⃣",h:true,p:"Comparez les OPCVM présélectionnés sur :",l:["La performance historique sur une période représentative","Les frais associés (impact significatif sur le rendement)","Le niveau de risque selon votre aversion","Les documents d'information (note, fiche signalétique)"]},
+{t:"Étapes 4 & 5 : Souscrire et Suivre",i:"4️⃣",h:false,p:"Souscrivez via les banques, sociétés de bourse ou sociétés de gestion. Après souscription, vous recevez un avis d'opération. Surveillez régulièrement votre portefeuille.",l:null},
+],
+cards:[
+{q:"Quelles sont les 5 étapes pour investir ?",a:"1. Définir son profil → 2. Présélectionner → 3. Comparer et lire → 4. Souscrire → 5. Suivre",e:"🗺️"},
+{q:"Où peut-on souscrire à un OPCVM ?",a:"Banques, Sociétés de Bourse, ou Sociétés de gestion",e:"🏦"},
+{q:"Que contient l'avis d'opération ?",a:"Identité, compte titres, OPCVM, date, type, quantité, VL, commissions, TPCVM, TVA, montant net",e:"📄"},
+{q:"Quel conseil clé avant de souscrire ?",a:"Ne pas investir dans un OPCVM qu'on ne comprend pas. Lire la note d'information et la fiche signalétique.",e:"⚠️"},
+{q:"Pourquoi diversifier son portefeuille ?",a:"Investir dans plusieurs OPCVM de différentes catégories réduit le risque global",e:"🎨"},
+],
+quiz:[
+{q:"Quelle est la première étape pour investir en OPCVM ?",o:["Choisir la banque","Définir ses objectifs et son profil d'investisseur","Lire les documents","Souscrire directement"],c:1,e:"La première étape est de définir ses objectifs et son profil d'investisseur."},
+{q:"Via quels canaux peut-on souscrire à un OPCVM ?",o:["Seulement en ligne","Banques, sociétés de bourse, sociétés de gestion","Uniquement à la Bourse","Seulement en agence"],c:1,e:"Pour souscrire, vous devez vous adresser aux banques, sociétés de bourse ou sociétés de gestion."},
+{q:"Quelle taxe peut s'appliquer lors d'un rachat profitable ?",o:["TVA uniquement","TIC","TPCVM — Taxe sur les Profits de Cession de Valeurs Mobilières","Droits de douane"],c:2,e:"Lors d'un rachat profitable, la TPCVM peut s'appliquer sur les plus-values réalisées."},
+{q:"À quelle fréquence faut-il réévaluer son portefeuille OPCVM ?",o:["Jamais","Seulement en cas de perte","Périodiquement, selon l'évolution de ses objectifs","Une fois par an obligatoirement"],c:2,e:"Il faut réévaluer périodiquement son portefeuille en fonction de ses objectifs, sa tolérance au risque et les conditions du marché."},
+],
+exs:[
+{q:"Décrivez le profil d'investisseur adapté à un OPCVM Monétaire :",h:null,a:null,s:"Faible tolérance au risque, horizon court terme, cherchant stabilité et liquidité"},
+{q:"Citez 3 critères pour comparer deux OPCVM :",h:null,a:null,s:"Performance historique, frais de gestion, niveau de risque/sensibilité"},
+]},
+{id:7,title:"Les Acteurs",icon:"🏛️",
+theory:[
+{t:"L'AMMC — Régulateur",i:"🏛️",h:false,p:"L'Autorité Marocaine du Marché des Capitaux agrée les OPCVM en approuvant le règlement de gestion ou les statuts. Elle délivre le visa sur la note d'information et assure le contrôle permanent.",l:null},
+{t:"La Société de gestion",i:"🏢",h:true,p:"À l'origine de la création de l'OPCVM. Elle assure la gestion administrative, comptable et financière.",l:["Gère le portefeuille selon la politique de placement","Initie les opérations d'achat et de vente","Valorise les portefeuilles et arrête la VL","Responsable de l'information des investisseurs"]},
+{t:"Le Dépositaire & Dépositaire central",i:"🏦",h:false,p:"Le dépositaire (généralement une banque) garantit la conservation des actifs, exécute les ordres et vérifie la conformité. Le dépositaire central assure la conservation des titres et facilite leur circulation.",l:null},
+{t:"CAC et Réseau de commercialisation",i:"🔍",h:false,p:"Le commissaire aux comptes certifie les états comptables semestriels et annuels. Le réseau de commercialisation (banques, sociétés de bourse) collecte les ordres et assure la promotion.",l:null},
+],
+cards:[
+{q:"Quel est le rôle de l'AMMC ?",a:"Régulateur : agrée les OPCVM, délivre les visas sur les notes d'information, assure le contrôle permanent",e:"🏛️"},
+{q:"Quel est le rôle de la société de gestion ?",a:"Créer et gérer administrativement, comptablement et financièrement l'OPCVM ; valoriser les portefeuilles et informer les investisseurs",e:"🏢"},
+{q:"Quel est le rôle du dépositaire ?",a:"Garantir la conservation des actifs, exécuter les ordres de souscription/rachat, vérifier la conformité des ordres de gestion",e:"🔒"},
+{q:"Quel est le rôle du commissaire aux comptes ?",a:"Contrôler la régularité des comptes et certifier les états comptables semestriels et annuels",e:"🔍"},
+{q:"Quel est le rôle du réseau de commercialisation ?",a:"Collecter les ordres de souscription/rachat et assurer la promotion de l'OPCVM",e:"🌐"},
+],
+quiz:[
+{q:"Quel acteur agrée les OPCVM au Maroc ?",o:["Bank Al-Maghrib","Le Ministère des Finances","L'AMMC","La Bourse de Casablanca"],c:2,e:"L'AMMC (Autorité Marocaine du Marché des Capitaux) est le régulateur qui agrée les OPCVM."},
+{q:"Qui valorise le portefeuille et arrête la valeur liquidative ?",o:["L'AMMC","Le dépositaire","La société de gestion","Le commissaire aux comptes"],c:2,e:"La société de gestion procède à la valorisation des portefeuilles et arrête la valeur liquidative."},
+{q:"Le dépositaire de l'OPCVM est généralement :",o:["Une société de bourse","Un établissement bancaire","Un cabinet d'audit","Une compagnie d'assurance"],c:1,e:"Le dépositaire est généralement un établissement bancaire."},
+{q:"Qui certifie les états comptables semestriels et annuels ?",o:["L'AMMC","La société de gestion","Le commissaire aux comptes","Le dépositaire central"],c:2,e:"Le commissaire aux comptes (CAC) contrôle et certifie les états comptables semestriels et annuels."},
+],
+exs:[
+{q:"Listez les 6 acteurs principaux du marché des OPCVM :",h:null,a:null,s:"AMMC, Société de gestion, Dépositaire de l'OPCVM, Dépositaire central, Commissaire aux comptes, Réseau de commercialisation"},
+{q:"Quel acteur contactez-vous en premier pour souscrire à un OPCVM ?",h:null,a:null,s:"Le réseau de commercialisation (banque, société de bourse ou société de gestion)"},
+]},
+{id:8,title:"Frais et Commissions",icon:"💳",
+theory:[
+{t:"3 types de frais à connaître",i:"💳",h:false,p:"Avant d'investir en OPCVM, il faut se renseigner sur les différents frais qui vous seront appliqués : commissions de souscription, commissions de rachat, et frais de gestion.",l:null},
+{t:"Commissions de souscription",i:"➕",h:false,p:"S'ajoutent à la valeur liquidative lors de chaque souscription. Pour certaines catégories d'OPCVM, ces frais peuvent se négocier avec votre intermédiaire.",l:null},
+{t:"Commissions de rachat",i:"➖",h:false,p:"Fonctionnent sur le même principe mais s'appliquent lors de la revente des parts. Elles viennent diminuer la valeur de rachat des actions ou parts d'OPCVM.",l:null},
+{t:"Frais de gestion",i:"⚙️",h:true,p:"Supportés par les investisseurs, ils représentent les coûts de fonctionnement et d'administration de l'OPCVM. Ils sont prélevés directement sur l'actif net.",l:["Plafond réglementaire : 2% HT maximum de l'actif net","Prélevés directement sur l'actif net du fonds","Reflétés dans la valeur liquidative"]},
+],
+cards:[
+{q:"Qu'est-ce qu'une commission de souscription ?",a:"Une commission qui s'ajoute à la valeur liquidative lors de chaque souscription — peut être négociée pour certaines catégories",e:"➕"},
+{q:"Comment fonctionnent les commissions de rachat ?",a:"Elles viennent diminuer la valeur de rachat des parts/actions lors de la revente",e:"➖"},
+{q:"Quel est le plafond des frais de gestion ?",a:"2% HT maximum de l'actif net du fonds — prélevés directement sur l'actif",e:"⚙️"},
+{q:"Que signifie TPCVM ?",a:"Taxe sur les Profits de Cession de Valeurs Mobilières — applicable lors d'un rachat profitable",e:"🏛️"},
+{q:"Comment les frais de gestion impactent-ils l'investisseur ?",a:"Ils sont prélevés sur l'actif net, donc reflétés dans la valeur liquidative — invisibles mais réels",e:"💡"},
+],
+quiz:[
+{q:"Les frais de gestion d'un OPCVM ne peuvent excéder :",o:["1% HT de l'actif net","2% HT de l'actif net","5% HT de l'actif net","Il n'y a pas de plafond"],c:1,e:"Les frais de gestion ne peuvent excéder 2% HT de l'actif net du fonds."},
+{q:"Les commissions de souscription s'appliquent :",o:["Lors du rachat","Lors de la souscription","Annuellement","Mensuellement"],c:1,e:"Les commissions de souscription s'ajoutent à la valeur liquidative lors de chaque souscription."},
+{q:"Qu'est-ce que la TPCVM ?",o:["Une commission de souscription","Une taxe sur les profits de cession de valeurs mobilières","Des frais de gestion","Une commission de rachat"],c:1,e:"La TPCVM (Taxe sur les Profits de Cession de Valeurs Mobilières) peut s'appliquer lors d'un rachat profitable."},
+{q:"Comment sont prélevés les frais de gestion ?",o:["Par prélèvement bancaire mensuel","Directement sur l'actif net de l'OPCVM","En une fois à la souscription","Seulement lors du rachat"],c:1,e:"Les frais de gestion sont prélevés directement sur l'actif net, reflétés dans la valeur liquidative."},
+],
+exs:[
+{q:"Un OPCVM a un actif net de 200M MAD et des frais de gestion de 1,5%. Quel est le montant annuel des frais ?",h:"200 000 000 × 1,5% =",a:"3000000",u:"MAD",t:0},
+{q:"Un investisseur souscrit 50 000 MAD avec une commission de souscription de 1%. Quel montant est effectivement investi ?",h:"50 000 × (1 - 0,01) = 50 000 - 500 =",a:"49500",u:"MAD",t:0},
+]},
+];
+
+// ===== STATE =====
+let completed = JSON.parse(localStorage.getItem('opcvm_v2')||'[]');
+let curLesson = null, curTab = 'theory', curQIdx = 0, qScore = 0;
+let musicOn = false, audioCtx = null, bgInterval = null, bgNoteIdx = 0;
+const bgMelody = [261,294,330,349,392,349,330,294,261,329,392,440,392,329];
+
+function save(){localStorage.setItem('opcvm_v2', JSON.stringify(completed));}
+
+// ===== AUDIO =====
+function getCtx(){if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function tone(f,d,type='sine',v=0.25){
+  try{const ctx=getCtx(),o=ctx.createOscillator(),g=ctx.createGain();
+  o.connect(g);g.connect(ctx.destination);o.type=type;o.frequency.value=f;
+  g.gain.setValueAtTime(v,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+d);
+  o.start();o.stop(ctx.currentTime+d);}catch(e){}}
+function sfxSuccess(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.18,'sine',.2),i*90));}
+function sfxUnlock(){[330,440,550,660].forEach((f,i)=>setTimeout(()=>tone(f,.15,'triangle',.18),i*75));}
+function sfxWrong(){tone(200,.28,'sawtooth',.14);}
+function sfxCorrect(){[440,550].forEach((f,i)=>setTimeout(()=>tone(f,.12,'sine',.18),i*75));}
+function sfxClick(){tone(700,.04,'sine',.08);}
+function sfxFlip(){tone(900,.08,'triangle',.07);}
+function sfxEnter(){[330,415,523].forEach((f,i)=>setTimeout(()=>tone(f,.16,'sine',.16),i*90));}
+function sfxComplete(){[523,659,784,880,1047,880,784,659].forEach((f,i)=>setTimeout(()=>tone(f,.18,'sine',.2),i*110));}
+function bgNote(){if(!musicOn)return;try{tone(bgMelody[bgNoteIdx%bgMelody.length],.9,'sine',.05);bgNoteIdx++;}catch(e){}}
+function toggleMusic(){
+  musicOn=!musicOn;
+  document.getElementById('musicBtn').textContent=musicOn?'🔇':'🎵';
+  if(musicOn){getCtx();bgInterval=setInterval(bgNote,1100);bgNote();}
+  else if(bgInterval){clearInterval(bgInterval);}
+}
+
+// ===== STARS =====
+(function(){const c=document.getElementById('stars');for(let i=0;i<70;i++){
+  const s=document.createElement('div');s.className='star';
+  const sz=Math.random()*3+1;
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;animation-delay:${Math.random()*3}s;animation-duration:${Math.random()*2+1.5}s`;
+  c.appendChild(s);}})();
+
+// ===== CONFETTI =====
+function confetti(){
+  const cols=['#f5c518','#1d9e75','#1e7fd9','#e8a800','#4db8e8','#ff6b6b','#fff'];
+  for(let i=0;i<70;i++){const p=document.createElement('div');p.className='confetti-piece';
+  const sz=Math.random()*10+5;
+  p.style.cssText=`left:${Math.random()*100}vw;top:-20px;background:${cols[Math.floor(Math.random()*cols.length)]};width:${sz}px;height:${sz}px;animation-duration:${Math.random()*2+1.5}s;animation-delay:${Math.random()*.6}s;border-radius:${Math.random()>.5?'50%':'3px'}`;
+  document.body.appendChild(p);setTimeout(()=>p.remove(),4000);}
+}
+
+// ===== SCREENS =====
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');}
+
+// ===== HOME =====
+function goToPath(){sfxClick();show('path');renderPath();setTimeout(()=>{const r=document.getElementById('roadAnim');if(r){r.style.transition='stroke-dashoffset 2.5s ease';r.style.strokeDashoffset='0';}},100);}
+
+// ===== PATH =====
+function renderPath(){
+  const done=completed.length, pct=Math.round(done/LESSONS.length*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=done+' / '+LESSONS.length+' leçons complétées';
+  const grid=document.getElementById('lessonsGrid');grid.innerHTML='';
+  LESSONS.forEach((l,i)=>{
+    const isDone=completed.includes(i), isAvail=i===0||completed.includes(i-1), isLocked=!isDone&&!isAvail;
+    // SVG node color
+    const node=document.getElementById('pathNode'+i);
+    if(node){
+      const c=node.querySelector('circle');
+      if(isDone){c.setAttribute('fill','#1d9e75');c.setAttribute('stroke','#0f6e56');}
+      else if(isAvail){c.setAttribute('fill','#1a2d5a');c.setAttribute('stroke','#f5c518');c.setAttribute('stroke-width','3');}
+      else{c.setAttribute('fill','#0d1828');c.setAttribute('stroke','#2a3a5a');}
+    }
+    // Card
+    const card=document.createElement('div');
+    card.className='lesson-card '+(isLocked?'locked':isDone?'completed':'available current');
+    card.onclick=()=>{if(!isLocked)openLesson(i);};
+    const badge=isLocked?'<span class="lc-badge badge-locked">🔒</span>':isDone?'<span class="lc-badge badge-done">✓</span>':'<span class="lc-badge badge-new">Nouveau</span>';
+    card.innerHTML=`${badge}<span class="lc-icon">${l.icon}</span><div class="lc-num">Leçon ${i+1}</div><div class="lc-title">${l.title}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function openLesson(idx){
+  if(idx!==0&&!completed.includes(idx-1))return;
+  sfxEnter();curLesson=idx;curTab='theory';
+  show('lesson');
+  document.getElementById('lessonTopTitle').textContent=LESSONS[idx].icon+' '+LESSONS[idx].title;
+  renderDots();renderLesson();
+}
+function backToPath(){sfxClick();show('path');renderPath();}
+
+function renderDots(){
+  const d=document.getElementById('lessonDots');d.innerHTML='';
+  ['theory','cards','quiz'].forEach(t=>{
+    const el=document.createElement('div');el.className='dot'+(t===curTab?' active':'');el.id='dot-'+t;
+    el.onclick=()=>switchTab(t);d.appendChild(el);
+  });
+}
+function switchTab(t){
+  sfxClick();curTab=t;
+  document.querySelectorAll('.dot').forEach(d=>d.classList.remove('active'));
+  const dd=document.getElementById('dot-'+t);if(dd)dd.classList.add('active');
+  document.querySelectorAll('.ltab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  const btn=document.getElementById('ltab-'+t);if(btn)btn.classList.add('active');
+  const panel=document.getElementById('panel-'+t);if(panel)panel.classList.add('active');
+  if(t==='quiz')initQuiz();
+}
+
+function renderLesson(){
+  const l=LESSONS[curLesson];
+  let html=`<div class="lesson-tabs">
+    <button class="ltab active" id="ltab-theory" onclick="switchTab('theory')">📚 Théorie</button>
+    <button class="ltab" id="ltab-cards" onclick="switchTab('cards')">🃏 Flashcards</button>
+    <button class="ltab" id="ltab-quiz" onclick="switchTab('quiz')">🧠 Quiz</button>
+  </div>`;
+  // THEORY
+  html+=`<div class="tab-panel active" id="panel-theory">`;
+  l.theory.forEach(t=>{
+    html+=`<div class="theory-block${t.h?' highlight':''}"><h3>${t.i} ${t.t}</h3><p>${t.p}</p>`;
+    if(t.l){html+='<ul>';t.l.forEach(li=>html+=`<li>${li}</li>`);html+='</ul>';}
+    if(t.stats){html+='<div class="stat-row">';t.stats.forEach(s=>html+=`<div class="stat-chip"><strong>${s[0]}</strong><span>${s[1]}</span></div>`);html+='</div>';}
+    html+='</div>';
+  });
+  // Exercises
+  html+=`<div style="margin-top:22px"><div class="flip-section-title">🛠️ Exercices pratiques</div>`;
+  l.exs.forEach((ex,i)=>{
+    html+=`<div class="exercise-block"><h3>📌 Exercice ${i+1}</h3><p>${ex.q}</p>`;
+    if(ex.h)html+=`<p class="exercise-hint">💡 Indice : ${ex.h}</p>`;
+    html+=`<input type="text" class="exercise-input" id="ei${i}" placeholder="Votre réponse...">
+    <button class="btn-check" onclick="checkEx(${i})">Vérifier ✓</button>
+    <div class="exercise-result" id="er${i}"></div></div>`;
+  });
+  html+=`</div></div>`;
+  // CARDS
+  html+=`<div class="tab-panel" id="panel-cards">
+  <div class="flip-hint-bar">💡 Cliquez sur une carte pour révéler la réponse</div>
+  <div class="flip-grid">`;
+  l.cards.forEach((c,i)=>{
+    html+=`<div class="flip-card" id="fc${i}" onclick="flipCard(${i})">
+      <div class="flip-inner">
+        <div class="flip-front"><div class="card-emoji">${c.e}</div><div class="card-q">${c.q}</div><div class="flip-hint">Cliquer pour retourner ↩</div></div>
+        <div class="flip-back"><div class="card-a">${c.a}</div></div>
+      </div></div>`;
+  });
+  html+=`</div><div style="text-align:center;margin-top:28px"><button class="btn-next" onclick="switchTab('quiz')">Passer au Quiz →</button></div></div>`;
+  // QUIZ placeholder
+  html+=`<div class="tab-panel" id="panel-quiz"><div id="quiz-inner"></div></div>`;
+  document.getElementById('lessonContent').innerHTML=html;
+}
+
+function flipCard(i){sfxFlip();document.getElementById('fc'+i).classList.toggle('flipped');}
+
+function checkEx(i){
+  sfxClick();const l=LESSONS[curLesson],ex=l.exs[i];
+  const val=document.getElementById('ei'+i).value.trim();
+  const res=document.getElementById('er'+i);res.classList.add('show');
+  if(ex.a!==null){
+    const num=parseFloat(val.replace(',','.').replace(/\s/g,''));
+    const ans=parseFloat(ex.a),tol=ex.t||0;
+    if(!isNaN(num)&&Math.abs(num-ans)<=tol){res.className='exercise-result show ok';res.innerHTML='✅ Correct ! Réponse : <strong>'+ans+(ex.u?' '+ex.u:'')+'</strong>';sfxCorrect();}
+    else{res.className='exercise-result show nok';res.innerHTML='❌ Pas tout à fait. La réponse est : <strong>'+ans+(ex.u?' '+ex.u:'')+'</strong>';sfxWrong();}
+  }else{res.className='exercise-result show ok';res.innerHTML='✅ Exemple de réponse : <em>'+ex.s+'</em>';sfxCorrect();}
+}
+
+// ===== QUIZ =====
+function initQuiz(){curQIdx=0;qScore=0;renderQ();}
+function renderQ(){
+  const l=LESSONS[curLesson],q=l.quiz[curQIdx];
+  const letters=['A','B','C','D'];
+  document.getElementById('quiz-inner').innerHTML=`
+    <div class="quiz-container">
+      <div class="quiz-q-num">Question ${curQIdx+1} / ${l.quiz.length}</div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">${q.o.map((o,i)=>`<button class="quiz-opt" id="qo${i}" onclick="answer(${i})"><span class="opt-letter">${letters[i]}</span>${o}</button>`).join('')}</div>
+      <div id="qfb"></div>
+    </div>`;
+}
+function answer(chosen){
+  const l=LESSONS[curLesson],q=l.quiz[curQIdx];
+  if(chosen===q.c){qScore++;sfxCorrect();}else sfxWrong();
+  document.querySelectorAll('.quiz-opt').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.c)b.classList.add('correct');
+    else if(i===chosen)b.classList.add('wrong');
+    else b.classList.add('revealed');
+  });
+  document.getElementById('qfb').innerHTML=`
+    <div class="quiz-feedback ${chosen===q.c?'correct':'wrong'}">${chosen===q.c?'✅':'❌'} ${q.e}</div>
+    <button class="btn-next" onclick="nextQ()">${curQIdx<l.quiz.length-1?'Question suivante →':'Voir mes résultats 🏆'}</button>`;
+}
+function nextQ(){sfxClick();curQIdx++;if(curQIdx<LESSONS[curLesson].quiz.length)renderQ();else showResult();}
+function showResult(){
+  const l=LESSONS[curLesson],pct=Math.round(qScore/l.quiz.length*100);
+  const pass=pct>=80;
+  let stars=pct>=80?'⭐⭐⭐':pct>=60?'⭐⭐':'⭐';
+  let msg=pct>=80?'Excellent ! Vous maîtrisez parfaitement cette leçon.':pct>=60?'Bon travail ! Encore quelques révisions et vous serez au top.':'Continuez à pratiquer ! Relisez la théorie et retentez le quiz.';
+  const isNew=pass&&!completed.includes(curLesson);
+  if(isNew){completed.push(curLesson);save();}
+  if(pct>=80){confetti();sfxComplete();}else if(isNew)sfxUnlock();
+  const hasNext=curLesson<LESSONS.length-1;
+  document.getElementById('quiz-inner').innerHTML=`
+    <div class="result-wrap">
+      <span class="result-trophy">${pct>=80?'🏆':'📊'}</span>
+      <div class="result-score">${qScore}/${l.quiz.length}</div>
+      <div class="result-pct">Score : ${pct}%</div>
+      <div class="result-stars">${stars}</div>
+      ${isNew&&hasNext?`<div class="result-unlock">🔓 Bravo ! La leçon suivante est maintenant débloquée !</div>`:''}
+      <div class="result-msg">${msg}</div>
+      <div class="result-btns">
+        ${pass&&hasNext?`<button class="btn-continue" onclick="openLesson(${curLesson+1})">Leçon suivante →</button>`:''}
+        <button class="btn-secondary" onclick="initQuiz()">🔄 Recommencer</button>
+        <button class="btn-secondary" onclick="backToPath()">🗺️ Parcours</button>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>
