@@ -221,160 +221,170 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#0a1628 0
     <div class="progress-label" id="progressLabel">0 / 9 leçons complétées</div>
   </div>
   <div class="path-svg-container">
-    <svg viewBox="0 0 780 580" class="path-svg" id="pathSvg" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 780 600" class="path-svg" id="pathSvg" xmlns="http://www.w3.org/2000/svg">
 
       <!--
-        ViewBox élargi à 780 pour éviter tout tronquage
-        Route décalée vers la droite : x_gauche=100, x_droite=660
-        Virage droit extérieur à x=720 max (dans le viewBox)
-        Virage gauche extérieur à x=40 min (dans le viewBox)
-        y_bas=460, y_milieu=280, y_haut=100
+        Route en S :
+        Ligne basse  y=460 : x=130 → x=660
+        Arrondi droit      : (660,460) → (730,370) → (660,280)
+        Ligne médiane y=280: x=660 → x=130
+        Arrondi gauche     : (130,280) → (60,190) → (130,100)
+        Ligne haute  y=100 : x=130 → x=660
 
-        Disposition :
-        Ligne basse  y=460 : x=100→660  étapes 1(260) 2(500)
-        Arrondi droit       : (660,460)→(720,370)→(660,280)  étape 3 au centre (720,370)
-        Ligne médiane y=280 : x=660→100  étapes 4(520) 5(360) 6(200)
-        Arrondi gauche      : (100,280)→(40,190)→(100,100)   étape 7 au centre (40,190)
-        Ligne haute  y=100  : x=100→660  étapes 8(260) 9(500)
-        Drapeau : avant x=100,y=460 avec espace
-        Trophée : après x=660,y=100 avec espace
+        Drapeau : x=80 y=460 (espace entre x=80 et début route x=130)
+        Trophée : centré sur fin route x=660 y=100 (au milieu de la route)
+
+        Nœuds :
+        1 (Définition)            ligne basse  x=260 y=460
+        2 (Formes juridiques)     ligne basse  x=500 y=460
+        3 (Catégories)            arrondi droit x=730 y=370 — label à GAUCHE
+        4 (Risques et Rendements) ligne médiane x=530 y=280
+        5 (Valeur Liquidative)    ligne médiane x=380 y=280
+        6 (Documents Information) ligne médiane x=220 y=280
+        7 (Investir)              arrondi gauche x=60 y=190 — label à DROITE
+        8 (Acteurs)               ligne haute  x=260 y=100
+        9 (Frais et Commissions)  ligne haute  x=490 y=100
       -->
 
       <!-- ============================================ -->
-      <!-- ROUTE GOUDRONNÉE — asphalte + bords + tirets -->
-      <!-- PAS de ligne de progression colorée          -->
+      <!-- ROUTE GOUDRONNÉE                             -->
       <!-- ============================================ -->
 
       <!-- LIGNE BASSE -->
-      <path d="M100,460 L660,460" stroke="#1e1e2e" stroke-width="42" fill="none" stroke-linecap="butt"/>
-      <path d="M100,439 L660,439" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M100,481 L660,481" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M120,460 L640,460" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
+      <path d="M130,460 L660,460" stroke="#1e1e2e" stroke-width="42" fill="none" stroke-linecap="butt"/>
+      <path d="M130,439 L660,439" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M130,481 L660,481" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M150,460 L640,460" stroke="rgba(255,255,255,0.28)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
 
       <!-- ARRONDI DROIT -->
       <path d="M660,460 C730,460 730,280 660,280" stroke="#1e1e2e" stroke-width="42" fill="none" stroke-linecap="butt"/>
-      <path d="M660,439 C710,439 710,301 660,301" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M660,481 C750,481 750,259 660,259" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M660,460 C730,460 730,280 660,280" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
+      <path d="M660,439 C712,439 712,301 660,301" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M660,481 C748,481 748,259 660,259" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M660,460 C730,460 730,280 660,280" stroke="rgba(255,255,255,0.28)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
 
       <!-- LIGNE MÉDIANE -->
-      <path d="M660,280 L100,280" stroke="#1e1e2e" stroke-width="42" fill="none" stroke-linecap="butt"/>
-      <path d="M660,259 L100,259" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M660,301 L100,301" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M640,280 L120,280" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
+      <path d="M660,280 L130,280" stroke="#1e1e2e" stroke-width="42" fill="none" stroke-linecap="butt"/>
+      <path d="M660,259 L130,259" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M660,301 L130,301" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M640,280 L150,280" stroke="rgba(255,255,255,0.28)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
 
       <!-- ARRONDI GAUCHE -->
-      <path d="M100,280 C30,280 30,100 100,100" stroke="#1e1e2e" stroke-width="42" fill="none" stroke-linecap="butt"/>
-      <path d="M100,259 C50,259 50,121 100,121" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M100,301 C10,301 10,79 100,79" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M100,280 C30,280 30,100 100,100" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
+      <path d="M130,280 C60,280 60,100 130,100" stroke="#1e1e2e" stroke-width="42" fill="none" stroke-linecap="butt"/>
+      <path d="M130,259 C78,259 78,121 130,121" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M130,301 C42,301 42,79 130,79" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M130,280 C60,280 60,100 130,100" stroke="rgba(255,255,255,0.28)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
 
       <!-- LIGNE HAUTE -->
-      <path d="M100,100 L660,100" stroke="#1e1e2e" stroke-width="42" fill="none" stroke-linecap="butt"/>
-      <path d="M100,79 L660,79" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M100,121 L660,121" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
-      <path d="M120,100 L640,100" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
+      <path d="M130,100 L660,100" stroke="#1e1e2e" stroke-width="42" fill="none" stroke-linecap="butt"/>
+      <path d="M130,79 L660,79" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M130,121 L660,121" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+      <path d="M150,100 L640,100" stroke="rgba(255,255,255,0.28)" stroke-width="2" fill="none" stroke-dasharray="22 16"/>
 
-      <!-- PROGRESSION ANIMÉE invisible par défaut, s'active via JS -->
+      <!-- Progression animée (invisible, juste pour le JS) -->
       <path id="roadAnim"
-        d="M100,460 L660,460 C730,460 730,280 660,280 L100,280 C30,280 30,100 100,100 L660,100"
-        stroke="rgba(245,197,24,0.0)" stroke-width="0" fill="none"
+        d="M130,460 L660,460 C730,460 730,280 660,280 L130,280 C60,280 60,100 130,100 L660,100"
+        stroke="rgba(0,0,0,0)" stroke-width="0" fill="none"
         stroke-dasharray="3000" stroke-dashoffset="3000"
         style="transition:stroke-dashoffset 3s ease"/>
 
       <!-- ============================================ -->
-      <!-- DRAPEAU START — avec espace avant la route  -->
+      <!-- DRAPEAU START — espace entre x=80 et x=130  -->
+      <!-- Juste le texte START en vert, pas de drapeau -->
       <!-- ============================================ -->
-      <!-- Espace : route commence à x=100, drapeau centré à x=100, poteau à x=100, flag à droite -->
-      <line x1="100" y1="418" x2="100" y2="483" stroke="white" stroke-width="3" stroke-linecap="round"/>
-      <rect x="100" y="400" width="44" height="22" rx="2" fill="#1a2d5a" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-      <rect x="100" y="400" width="11" height="7" fill="white" opacity="0.95"/>
-      <rect x="122" y="400" width="11" height="7" fill="white" opacity="0.95"/>
-      <rect x="111" y="407" width="11" height="8" fill="white" opacity="0.95"/>
-      <rect x="100" y="415" width="11" height="7" fill="white" opacity="0.95"/>
-      <rect x="122" y="415" width="11" height="7" fill="white" opacity="0.95"/>
-      <text x="100" y="510" text-anchor="middle" fill="#4dd8a0" font-size="11" font-family="Nunito,sans-serif" font-weight="800">🏁 START</text>
+      <!-- Poteau -->
+      <line x1="80" y1="430" x2="80" y2="483" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Drapeau simple rectangle damier -->
+      <rect x="80" y="408" width="40" height="24" rx="2" fill="#1a2d5a" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <rect x="80" y="408" width="10" height="8" fill="white" opacity="0.9"/>
+      <rect x="100" y="408" width="10" height="8" fill="white" opacity="0.9"/>
+      <rect x="90" y="416" width="10" height="8" fill="white" opacity="0.9"/>
+      <rect x="80" y="424" width="10" height="8" fill="white" opacity="0.9"/>
+      <rect x="100" y="424" width="10" height="8" fill="white" opacity="0.9"/>
+      <!-- Espace visible entre poteau (x=80) et route (x=130) -->
+      <text x="80" y="510" text-anchor="middle" fill="#4dd8a0" font-size="12" font-family="Nunito,sans-serif" font-weight="800">START</text>
 
       <!-- ============================================ -->
-      <!-- TROPHÉE — avec espace après fin route haute -->
+      <!-- TROPHÉE — centré sur la route haute y=100    -->
+      <!-- Espace au-dessus + texte en dessous          -->
       <!-- ============================================ -->
-      <text x="660" y="62" text-anchor="middle" font-size="30">🏆</text>
-      <text x="660" y="148" text-anchor="middle" fill="#f5c518" font-size="11" font-family="Nunito,sans-serif" font-weight="800">Diplômé !</text>
+      <text x="660" y="65" text-anchor="middle" font-size="28">🏆</text>
+      <text x="660" y="145" text-anchor="middle" fill="#f5c518" font-size="12" font-family="Nunito,sans-serif" font-weight="800">Diplômé !</text>
 
       <!-- ============================================ -->
       <!-- NŒUDS                                        -->
       <!-- ============================================ -->
 
-      <!-- 1 — Ligne basse x=260 y=460 -->
+      <!-- 1 — Définition — ligne basse x=260 y=460 -->
       <g id="pathNode0" class="pnode" onclick="openLesson(0)" style="cursor:pointer">
-        <text x="260" y="427" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">1</text>
+        <text x="260" y="427" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">1</text>
         <circle cx="260" cy="460" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
         <text x="260" y="467" text-anchor="middle" font-size="17">📝</text>
-        <text x="260" y="502" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Qu'est-ce ?</text>
+        <text x="260" y="502" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Définition</text>
       </g>
 
-      <!-- 2 — Ligne basse x=500 y=460 -->
+      <!-- 2 — Formes juridiques — ligne basse x=500 y=460 -->
       <g id="pathNode1" class="pnode" onclick="openLesson(1)" style="cursor:pointer">
-        <text x="500" y="427" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">2</text>
+        <text x="500" y="427" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">2</text>
         <circle cx="500" cy="460" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
         <text x="500" y="467" text-anchor="middle" font-size="17">⚖️</text>
-        <text x="500" y="502" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Formes juridiques</text>
+        <text x="500" y="502" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Formes juridiques</text>
       </g>
 
-      <!-- 3 — Arrondi droit, centre virage x=718 y=370 — chiffre à DROITE du cercle -->
+      <!-- 3 — Catégories — arrondi droit x=730 y=370 — label à GAUCHE -->
       <g id="pathNode2" class="pnode" onclick="openLesson(2)" style="cursor:pointer">
-        <circle cx="718" cy="370" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="718" y="377" text-anchor="middle" font-size="17">🗂️</text>
-        <text x="750" y="362" text-anchor="start" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">3</text>
-        <text x="750" y="378" text-anchor="start" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Catégories</text>
+        <circle cx="730" cy="370" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="730" y="377" text-anchor="middle" font-size="17">🗂️</text>
+        <text x="698" y="362" text-anchor="end" fill="rgba(255,255,255,0.85)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">3</text>
+        <text x="698" y="376" text-anchor="end" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Catégories</text>
       </g>
 
-      <!-- 4 — Ligne médiane x=520 y=280 -->
+      <!-- 4 — Risques et Rendements — ligne médiane x=530 y=280 -->
       <g id="pathNode3" class="pnode" onclick="openLesson(3)" style="cursor:pointer">
-        <text x="520" y="247" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">4</text>
-        <circle cx="520" cy="280" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="520" y="287" text-anchor="middle" font-size="17">⚡</text>
-        <text x="520" y="322" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Risques</text>
+        <text x="530" y="247" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">4</text>
+        <circle cx="530" cy="280" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="530" y="287" text-anchor="middle" font-size="17">⚡</text>
+        <text x="530" y="318" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Risques et Rendements</text>
       </g>
 
-      <!-- 5 — Ligne médiane x=360 y=280 -->
+      <!-- 5 — Valeur Liquidative — ligne médiane x=380 y=280 -->
       <g id="pathNode4" class="pnode" onclick="openLesson(4)" style="cursor:pointer">
-        <text x="360" y="247" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">5</text>
-        <circle cx="360" cy="280" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="360" y="287" text-anchor="middle" font-size="17">💰</text>
-        <text x="360" y="322" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Val. Liquidative</text>
+        <text x="380" y="247" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">5</text>
+        <circle cx="380" cy="280" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="380" y="287" text-anchor="middle" font-size="17">💰</text>
+        <text x="380" y="318" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Valeur Liquidative</text>
       </g>
 
-      <!-- 6 — Ligne médiane x=200 y=280 -->
+      <!-- 6 — Documents d'Information — ligne médiane x=220 y=280 -->
       <g id="pathNode5" class="pnode" onclick="openLesson(5)" style="cursor:pointer">
-        <text x="200" y="247" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">6</text>
-        <circle cx="200" cy="280" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="200" y="287" text-anchor="middle" font-size="17">📄</text>
-        <text x="200" y="322" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Documents</text>
+        <text x="220" y="247" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">6</text>
+        <circle cx="220" cy="280" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="220" y="287" text-anchor="middle" font-size="17">📄</text>
+        <text x="220" y="313" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Documents</text>
+        <text x="220" y="326" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">d'Information</text>
       </g>
 
-      <!-- 7 — Arrondi gauche, centre virage x=42 y=190 — chiffre à GAUCHE du cercle -->
+      <!-- 7 — Investir — arrondi gauche x=60 y=190 — chiffre+label à DROITE -->
       <g id="pathNode6" class="pnode" onclick="openLesson(6)" style="cursor:pointer">
-        <circle cx="42" cy="190" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="42" y="197" text-anchor="middle" font-size="17">🎯</text>
-        <text x="72" y="182" text-anchor="start" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">7</text>
-        <text x="72" y="198" text-anchor="start" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Investir</text>
+        <circle cx="60" cy="190" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="60" y="197" text-anchor="middle" font-size="17">🎯</text>
+        <text x="92" y="182" text-anchor="start" fill="rgba(255,255,255,0.85)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">7</text>
+        <text x="92" y="196" text-anchor="start" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Investir</text>
       </g>
 
-      <!-- 8 — Ligne haute x=260 y=100 -->
+      <!-- 8 — Acteurs — ligne haute x=270 y=100 -->
       <g id="pathNode7" class="pnode" onclick="openLesson(7)" style="cursor:pointer">
-        <text x="260" y="67" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">8</text>
-        <circle cx="260" cy="100" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="260" y="107" text-anchor="middle" font-size="17">🏛️</text>
-        <text x="260" y="142" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Acteurs</text>
+        <text x="270" y="67" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">8</text>
+        <circle cx="270" cy="100" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="270" y="107" text-anchor="middle" font-size="17">🏛️</text>
+        <text x="270" y="142" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Acteurs</text>
       </g>
 
-      <!-- 9 — Ligne haute x=500 y=100 -->
+      <!-- 9 — Frais et Commissions — ligne haute x=490 y=100 -->
       <g id="pathNode8" class="pnode" onclick="openLesson(8)" style="cursor:pointer">
-        <text x="500" y="67" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">9</text>
-        <circle cx="500" cy="100" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
-        <text x="500" y="107" text-anchor="middle" font-size="17">💳</text>
-        <text x="500" y="142" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Frais &amp; Commissions</text>
+        <text x="490" y="67" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="12" font-family="Nunito,sans-serif" font-weight="900">9</text>
+        <circle cx="490" cy="100" r="26" fill="#1a2d5a" stroke="#3d5480" stroke-width="2.5"/>
+        <text x="490" y="107" text-anchor="middle" font-size="17">💳</text>
+        <text x="490" y="142" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Nunito,sans-serif" font-weight="700">Frais et Commissions</text>
       </g>
 
     </svg>
