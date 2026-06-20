@@ -192,10 +192,73 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#0a1628 0
 </head>
 <body>
 
+<!-- ===== LOGIN ===== -->
+<div id="screen-login" class="screen active" style="justify-content:center;background:linear-gradient(135deg,#0a1628 0%,#1a2d5a 50%,#0e3d6b 100%);position:relative;overflow:hidden">
+  <div class="stars" id="stars-login"></div>
+  <div style="position:relative;z-index:2;width:100%;max-width:420px;padding:20px">
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="font-size:56px;margin-bottom:10px;animation:bounce 2s infinite">📊</div>
+      <h1 style="font-family:Poppins,sans-serif;font-size:2em;font-weight:900;color:white">OPCVM <span style="color:#f5c518">Academy</span></h1>
+      <p style="color:#7090b8;font-size:.9em;margin-top:6px">Formation interactive — Guide AMMC</p>
+    </div>
+
+    <!-- Login card -->
+    <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:32px;backdrop-filter:blur(12px)">
+      <h2 style="font-family:Poppins,sans-serif;font-size:1.2em;font-weight:700;margin-bottom:24px;text-align:center;color:white">Connexion</h2>
+
+      <!-- Identifiant -->
+      <div style="margin-bottom:18px">
+        <label style="display:block;font-size:.82em;font-weight:700;color:#a0c4e8;margin-bottom:7px;letter-spacing:.5px">IDENTIFIANT</label>
+        <div style="position:relative">
+          <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px">📧</span>
+          <input type="email" id="loginEmail" placeholder="votre@email.com"
+            style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:13px 14px 13px 42px;color:white;font-size:.95em;font-family:Nunito,sans-serif;outline:none;transition:border-color .3s"
+            onfocus="this.style.borderColor='rgba(245,197,24,0.6)'" 
+            onblur="this.style.borderColor='rgba(255,255,255,0.15)'"
+            onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
+      </div>
+
+      <!-- Mot de passe -->
+      <div style="margin-bottom:28px">
+        <label style="display:block;font-size:.82em;font-weight:700;color:#a0c4e8;margin-bottom:7px;letter-spacing:.5px">MOT DE PASSE</label>
+        <div style="position:relative">
+          <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px">🔒</span>
+          <input type="password" id="loginPassword" placeholder="••••••••"
+            style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:13px 14px 13px 42px;color:white;font-size:.95em;font-family:Nunito,sans-serif;outline:none;transition:border-color .3s"
+            onfocus="this.style.borderColor='rgba(245,197,24,0.6)'"
+            onblur="this.style.borderColor='rgba(255,255,255,0.15)'"
+            onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
+      </div>
+
+      <!-- Erreur -->
+      <div id="loginError" style="display:none;background:rgba(216,90,48,0.15);border:1px solid rgba(216,90,48,0.35);border-radius:9px;padding:10px 14px;font-size:.85em;color:#f0b090;margin-bottom:18px;text-align:center">
+        ❌ Identifiant ou mot de passe incorrect
+      </div>
+
+      <!-- Bouton -->
+      <button onclick="doLogin()" id="loginBtn"
+        style="width:100%;background:linear-gradient(135deg,#f5c518,#e8a800);color:#1a2d5a;font-family:Poppins,sans-serif;font-weight:800;font-size:1.05em;border:none;border-radius:50px;padding:15px;cursor:pointer;transition:all .3s;letter-spacing:.5px">
+        Se connecter →
+      </button>
+
+      <div id="loginLoading" style="display:none;text-align:center;margin-top:16px;color:#a0c4e8;font-size:.88em">
+        ⏳ Vérification en cours...
+      </div>
+    </div>
+
+    <p style="text-align:center;color:rgba(255,255,255,0.2);font-size:.75em;margin-top:24px">
+      Autorité Marocaine du Marché des Capitaux · AMMC
+    </p>
+  </div>
+</div>
+
 <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Musique de fond">🎵</button>
 
 <!-- HOME -->
-<div id="screen-home" class="screen active">
+<div id="screen-home" class="screen">
   <div class="stars" id="stars"></div>
   <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:40px 20px;max-width:600px;width:100%">
     <span class="home-logo">📊</span>
@@ -837,6 +900,138 @@ function showResult(){
       </div>
     </div>`;
 }
+
+
+// ===== SUPABASE CONFIG =====
+const SB_URL = 'https://ypnpcltspzzmizlwddsm.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwbnBjbHRzcHp6bWl6bHdkZHNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NTA3NTcsImV4cCI6MjA5NzUyNjc1N30.jIcl7wJ7JAImdg-BNYOFxoaTKCPQwczLAwMDvCLHdp4';
+
+let currentUser = null;
+
+// Stars for login screen
+(function(){
+  const c=document.getElementById('stars-login');
+  if(!c)return;
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*3+1;
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;animation-delay:${Math.random()*3}s;animation-duration:${Math.random()*2+1.5}s`;
+    c.appendChild(s);
+  }
+})();
+
+async function sbFetch(path, opts={}){
+  const res = await fetch(SB_URL+path, {
+    ...opts,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer '+SB_KEY,
+      'Content-Type': 'application/json',
+      ...(opts.headers||{})
+    }
+  });
+  return res.json();
+}
+
+async function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pwd = document.getElementById('loginPassword').value.trim();
+  const errDiv = document.getElementById('loginError');
+  const loadDiv = document.getElementById('loginLoading');
+  const btn = document.getElementById('loginBtn');
+
+  if(!email || !pwd){ errDiv.style.display='block'; errDiv.textContent='❌ Veuillez remplir tous les champs'; return; }
+
+  errDiv.style.display='none';
+  loadDiv.style.display='block';
+  btn.disabled=true;
+
+  try{
+    const data = await sbFetch(
+      `/rest/v1/users?username=eq.${encodeURIComponent(email)}&password_hash=eq.${encodeURIComponent(pwd)}&select=*`
+    );
+    if(data && data.length>0){
+      currentUser = data[0];
+      // Load progress
+      const prog = await sbFetch(`/rest/v1/progress?user_id=eq.${currentUser.id}&select=lesson_index`);
+      completed = (prog||[]).map(p=>p.lesson_index);
+      save = () => {}; // save handled by Supabase now
+      loadDiv.style.display='none';
+      btn.disabled=false;
+      sfxSuccess();
+      // Show welcome then go to path
+      show('home');
+      // Update home with user name
+      document.querySelector('.home-sub').textContent = 'Bienvenue, '+currentUser.full_name+' ! Reprenez votre parcours.';
+    } else {
+      errDiv.style.display='block';
+      errDiv.textContent='❌ Identifiant ou mot de passe incorrect';
+      loadDiv.style.display='none';
+      btn.disabled=false;
+      sfxWrong();
+    }
+  } catch(e){
+    errDiv.style.display='block';
+    errDiv.textContent='❌ Erreur de connexion. Réessayez.';
+    loadDiv.style.display='none';
+    btn.disabled=false;
+  }
+}
+
+// Override save to also save to Supabase
+async function saveProgressToSupabase(lessonIndex, score){
+  if(!currentUser) return;
+  await sbFetch('/rest/v1/progress', {
+    method:'POST',
+    headers:{'Prefer':'resolution=merge-duplicates'},
+    body: JSON.stringify({
+      user_id: currentUser.id,
+      lesson_index: lessonIndex,
+      score: score
+    })
+  });
+}
+
+// Override showResult to also save to Supabase
+const _origShowResult = showResult;
+showResult = function(){
+  const l=LESSONS[curLesson], pct=Math.round(qScore/l.quiz.length*100);
+  const pass=pct>=80;
+  const wasNew=!completed.includes(curLesson);
+  if(pass && wasNew){
+    saveProgressToSupabase(curLesson, pct);
+  }
+  _origShowResult.apply(this, arguments);
+};
+
+// Add logout button to topbar
+const topbar = document.querySelector('.lesson-topbar');
+if(topbar){
+  const logoutBtn = document.createElement('button');
+  logoutBtn.textContent = '🚪';
+  logoutBtn.title = 'Déconnexion';
+  logoutBtn.style.cssText = 'background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:white;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:14px;';
+  logoutBtn.onclick = ()=>{ currentUser=null; completed=[]; show('login'); };
+  topbar.appendChild(logoutBtn);
+}
+
+// Also add logout to path screen
+function addLogoutToPath(){
+  const header = document.querySelector('.path-header');
+  if(header && !document.getElementById('logoutPathBtn')){
+    const btn = document.createElement('button');
+    btn.id='logoutPathBtn';
+    btn.innerHTML='🚪 Déconnexion';
+    btn.style.cssText='background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#7090b8;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:.8em;margin-top:10px;font-family:Nunito,sans-serif;';
+    btn.onclick=()=>{ currentUser=null; completed=[]; show('login'); };
+    header.appendChild(btn);
+  }
+}
+
+const _origGoToPath = goToPath;
+goToPath = function(){ _origGoToPath(); addLogoutToPath(); };
+const _origBackToPath = backToPath;
+backToPath = function(){ _origBackToPath(); addLogoutToPath(); };
 </script>
 </body>
 </html>
