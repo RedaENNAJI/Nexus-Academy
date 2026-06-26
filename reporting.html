@@ -478,7 +478,7 @@ function doSave() {
       user_id: currentUser.id,
       filename: savedFilename || 'document',
       sections_included: savedSections.length > 0 ? savedSections.map(function(s) { return s.name; }) : ['Dashboard'],
-      html_preview: generatedHTML.substring(0, 5000)
+      html_preview: generatedHTML
     })
   })
   .then(function(r) {
