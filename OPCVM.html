@@ -266,6 +266,9 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#0a1628 0
     <p class="home-sub">Formation interactive sur les Organismes de Placement Collectif en Valeurs Mobilières</p>
     <div class="home-ammc">🏛️ Guide officiel AMMC — Autorité Marocaine du Marché des Capitaux</div>
     <button class="btn-start" onclick="goToPath()">Commencer le parcours 🚀</button>
+    <a href="reporting.html" id="reportingBtn" style="display:none;margin-top:14px;background:linear-gradient(135deg,#1e7fd9,#1d9e75);color:white;font-family:Poppins,sans-serif;font-weight:800;font-size:1em;border:none;border-radius:50px;padding:14px 40px;cursor:pointer;text-decoration:none;align-items:center;gap:8px;box-shadow:0 6px 24px rgba(30,127,217,0.3);transition:all .3s">
+      📈 Accéder au Reporting
+    </a>
     <div class="home-badges">
       <div class="hbadge"><strong>9</strong><span>Leçons</span></div>
       <div class="hbadge"><strong>45+</strong><span>Flashcards</span></div>
@@ -961,8 +964,13 @@ async function doLogin(){
       sfxSuccess();
       // Show welcome then go to path
       show('home');
+      // Save to sessionStorage for reporting page
+      sessionStorage.setItem('opcvm_user', JSON.stringify(currentUser));
       // Update home with user name
       document.querySelector('.home-sub').textContent = 'Bienvenue, '+currentUser.full_name+' ! Reprenez votre parcours.';
+      // Show reporting button if admin
+      const repBtn = document.getElementById('reportingBtn');
+      if(repBtn) repBtn.style.display = currentUser.role==='admin' ? 'inline-flex' : 'none';
     } else {
       errDiv.style.display='block';
       errDiv.textContent='❌ Identifiant ou mot de passe incorrect';
@@ -1011,7 +1019,7 @@ if(topbar){
   logoutBtn.textContent = '🚪';
   logoutBtn.title = 'Déconnexion';
   logoutBtn.style.cssText = 'background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:white;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:14px;';
-  logoutBtn.onclick = ()=>{ currentUser=null; completed=[]; show('login'); };
+  logoutBtn.onclick = ()=>{ currentUser=null; completed=[]; sessionStorage.removeItem('opcvm_user'); show('login'); };
   topbar.appendChild(logoutBtn);
 }
 
@@ -1023,7 +1031,7 @@ function addLogoutToPath(){
     btn.id='logoutPathBtn';
     btn.innerHTML='🚪 Déconnexion';
     btn.style.cssText='background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#7090b8;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:.8em;margin-top:10px;font-family:Nunito,sans-serif;';
-    btn.onclick=()=>{ currentUser=null; completed=[]; show('login'); };
+    btn.onclick=()=>{ currentUser=null; completed=[]; sessionStorage.removeItem('opcvm_user'); show('login'); };
     header.appendChild(btn);
   }
 }
