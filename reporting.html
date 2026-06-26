@@ -276,17 +276,25 @@ let currentFileMime = null;
 let detectedSections = [];
 let generatedHTML = '';
 let currentUser = null;
-try {
-  const stored = localStorage.getItem('opcvm_user');
-  if (stored) currentUser = JSON.parse(stored);
-} catch(e) { currentUser = null; }
 
-// Check auth - if not logged in, redirect
-if (!currentUser || !currentUser.id) {
-  window.location.href = 'OPCVM.html';
-} else {
-  document.getElementById('userChip').textContent = '👤 ' + (currentUser.full_name || 'Utilisateur');
-}
+window.addEventListener('load', function() {
+  try {
+    const stored = localStorage.getItem('opcvm_user');
+    if (stored) currentUser = JSON.parse(stored);
+  } catch(e) { currentUser = null; }
+
+  if (!currentUser || !currentUser.id) {
+    window.location.href = 'OPCVM.html';
+    return;
+  }
+
+  const chip = document.getElementById('userChip');
+  if (chip) chip.textContent = '👤 ' + (currentUser.full_name || 'Utilisateur');
+  
+  // Init app
+  setStep(1);
+  loadHistory();
+});
 
 // ===== SUPABASE =====
 async function sbFetch(path, opts = {}) {
@@ -398,10 +406,10 @@ Données base64 : ${currentFileB64.substring(0, 2000)}...`
       }];
     }
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://ypnpcltspzzmizlwddsm.supabase.co/functions/v1/analyze-document', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, messages })
+      headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
+      body: JSON.stringify({ mode: 'analyze', fileB64: currentFileB64, fileMime: currentFileMime, fileName: currentFile.name, maxTokens: 1000 })
     });
     const data = await resp.json();
     const raw = data.content[0].text.replace(/```json|```/g, '').trim();
@@ -502,10 +510,10 @@ Réponds UNIQUEMENT avec le code HTML complet, sans aucun texte avant ou après,
       messages = [{ role: 'user', content: prompt + '\n\nDonnées du fichier (base64): ' + currentFileB64.substring(0, 3000) }];
     }
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://ypnpcltspzzmizlwddsm.supabase.co/functions/v1/analyze-document', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 8000, messages })
+      headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
+      body: JSON.stringify({ mode: 'generate', fileB64: currentFileB64, fileMime: currentFileMime, fileName: currentFile.name, sections: sectionsNames, maxTokens: 8000 })
     });
     const data = await resp.json();
     generatedHTML = data.content[0].text.replace(/^```html\n?|^```\n?|```$/gm, '').trim();
@@ -641,8 +649,6 @@ function showToast(msg, error = false) {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// Init
-setStep(1);
 </script>
 </body>
 </html>
