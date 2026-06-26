@@ -275,10 +275,10 @@ let currentFileB64 = null;
 let currentFileMime = null;
 let detectedSections = [];
 let generatedHTML = '';
-let currentUser = JSON.parse(sessionStorage.getItem('opcvm_user') || 'null');
+let currentUser = JSON.parse(localStorage.getItem('opcvm_user') || 'null');
 
 // Check auth
-if (!currentUser || currentUser.role !== 'admin') {
+if (!currentUser) {
   window.location.href = 'OPCVM.html';
 }
 document.getElementById('userChip').textContent = '👤 ' + (currentUser?.full_name || 'Admin');
