@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporting — Nexus Academy</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1628;--navy2:#1a2d5a;--blue:#1e7fd9;--sky:#4db8e8;
+  --yellow:#f5c518;--gold:#e8a800;--teal:#1d9e75;--coral:#D85A30;
+  --white:#fff;--card:#151f35;--border:rgba(255,255,255,0.08);
+}
+html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+
+/* ===== LAYOUT ===== */
+.app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:rgba(0,0,0,0.5);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+.topbar-logo{font-size:22px}
+.topbar-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.05em;color:var(--white)}
+.topbar-title span{color:var(--yellow)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.btn-back-home{background:rgba(255,255,255,0.07);border:1px solid var(--border);color:#a0c4e8;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:.82em;font-weight:700;font-family:'Nunito',sans-serif;transition:all .3s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-back-home:hover{background:rgba(255,255,255,0.14);color:white}
+.user-chip{background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.25);border-radius:50px;padding:6px 14px;font-size:.8em;font-weight:700;color:var(--yellow)}
+
+.main{flex:1;padding:28px 24px;max-width:1100px;margin:0 auto;width:100%}
+
+/* ===== STEPS ===== */
+.steps-bar{display:flex;gap:0;margin-bottom:36px;background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--border)}
+.step{flex:1;padding:14px 10px;text-align:center;font-size:.78em;font-weight:700;color:#4060a0;transition:all .3s;position:relative}
+.step.active{background:linear-gradient(135deg,rgba(30,127,217,.25),rgba(29,158,117,.15));color:var(--yellow)}
+.step.done{color:var(--teal)}
+.step-num{display:block;font-size:1.4em;margin-bottom:2px}
+.step-label{font-size:.85em;white-space:nowrap}
+
+/* ===== PANELS ===== */
+.panel{display:none}
+.panel.active{display:block;animation:fadein .35s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== UPLOAD ZONE ===== */
+.upload-zone{border:2px dashed rgba(30,127,217,0.4);border-radius:18px;padding:60px 40px;text-align:center;cursor:pointer;transition:all .3s;background:rgba(30,127,217,0.04);position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--yellow);background:rgba(245,197,24,0.05)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:60px;margin-bottom:16px;display:block}
+.upload-title{font-family:'Poppins',sans-serif;font-size:1.3em;font-weight:700;margin-bottom:8px}
+.upload-sub{color:#6080a0;font-size:.9em}
+.file-types{display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.ftype{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-size:.75em;color:#7090b0}
+
+.upload-preview{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:20px;display:none;align-items:center;gap:16px}
+.upload-preview.show{display:flex}
+.preview-icon{font-size:36px}
+.preview-info{flex:1}
+.preview-name{font-weight:700;font-size:.95em}
+.preview-size{color:#6080a0;font-size:.8em;margin-top:2px}
+.btn-analyze{background:linear-gradient(135deg,var(--blue),var(--teal));color:white;border:none;border-radius:50px;padding:12px 32px;font-weight:800;font-size:.95em;cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif;margin-top:24px;display:block;margin-left:auto;margin-right:auto}
+.btn-analyze:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(30,127,217,0.4)}
+.btn-analyze:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* ===== SECTIONS SELECTOR ===== */
+.sections-header{margin-bottom:24px}
+.sections-header h2{font-family:'Poppins',sans-serif;font-size:1.2em;font-weight:700;margin-bottom:6px}
+.sections-header p{color:#6080a0;font-size:.88em}
+.sections-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:28px}
+.section-item{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:14px 18px;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:12px}
+.section-item:hover{border-color:rgba(30,127,217,0.4);background:rgba(30,127,217,0.06)}
+.section-item.checked{border-color:var(--teal);background:rgba(29,158,117,0.1)}
+.section-check{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;font-size:13px}
+.section-item.checked .section-check{background:var(--teal);border-color:var(--teal)}
+.section-name{font-weight:700;font-size:.88em;flex:1}
+.section-detail{font-size:.75em;color:#5080a0;margin-top:2px}
+.sections-actions{display:flex;gap:10px;margin-bottom:20px}
+.btn-all{background:rgba(29,158,117,0.15);border:1px solid rgba(29,158,117,0.3);color:var(--teal);border-radius:8px;padding:7px 16px;cursor:pointer;font-size:.82em;font-weight:700;font-family:'Nunito',sans-serif}
+.btn-none{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#6080a0;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:.82em;font-weight:700;font-family:'Nunito',sans-serif}
+.btn-generate{background:linear-gradient(135deg,var(--yellow),var(--gold));color:var(--navy);border:none;border-radius:50px;padding:14px 40px;font-weight:900;font-size:1em;cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:8px;margin:0 auto}
+.btn-generate:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(245,197,24,0.4)}
+.btn-generate:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* ===== LOADING ===== */
+.loading-wrap{text-align:center;padding:60px 20px}
+.loading-spinner{width:60px;height:60px;border:4px solid rgba(255,255,255,0.1);border-top-color:var(--yellow);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 24px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-msg{font-size:1.1em;font-weight:700;color:#a0c4e8;margin-bottom:8px}
+.loading-sub{font-size:.85em;color:#4060a0}
+
+/* ===== DASHBOARD PREVIEW ===== */
+.dashboard-actions{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.dashboard-actions h3{font-family:'Poppins',sans-serif;font-size:1.1em;font-weight:700;flex:1}
+.btn-send{background:linear-gradient(135deg,#0078d4,#005a9e);color:white;border:none;border-radius:8px;padding:10px 22px;font-weight:700;font-size:.88em;cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:7px}
+.btn-send:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,120,212,0.4)}
+.btn-save{background:linear-gradient(135deg,var(--teal),#0f6e56);color:white;border:none;border-radius:8px;padding:10px 22px;font-weight:700;font-size:.88em;cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:7px}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(29,158,117,0.4)}
+.btn-new{background:rgba(255,255,255,0.07);border:1px solid var(--border);color:#a0c4e8;border-radius:8px;padding:10px 20px;font-weight:700;font-size:.88em;cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif}
+.btn-new:hover{background:rgba(255,255,255,0.14)}
+
+.mail-row{display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:16px;align-items:center;gap:12px;flex-wrap:wrap}
+.mail-row.show{display:flex}
+.mail-row label{font-size:.82em;font-weight:700;color:#a0c4e8;white-space:nowrap}
+.mail-input{flex:1;min-width:200px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 14px;color:white;font-size:.9em;font-family:'Nunito',sans-serif;outline:none;transition:border-color .3s}
+.mail-input:focus{border-color:rgba(0,120,212,0.6)}
+.btn-open-outlook{background:linear-gradient(135deg,#0078d4,#005a9e);color:white;border:none;border-radius:8px;padding:10px 22px;font-weight:700;font-size:.88em;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap}
+
+.dashboard-frame{border-radius:14px;overflow:hidden;border:1px solid var(--border);background:white}
+.dashboard-frame iframe{width:100%;min-height:700px;border:none;display:block}
+
+/* ===== HISTORY ===== */
+.history-header{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.history-header h2{font-family:'Poppins',sans-serif;font-size:1.2em;font-weight:700;flex:1}
+.history-empty{text-align:center;padding:60px;color:#4060a0}
+.history-empty-icon{font-size:48px;margin-bottom:12px;display:block;opacity:0.4}
+.history-grid{display:flex;flex-direction:column;gap:12px}
+.history-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:all .3s}
+.history-item:hover{border-color:rgba(30,127,217,0.3);background:rgba(30,127,217,0.05)}
+.hi-icon{font-size:32px;flex-shrink:0}
+.hi-info{flex:1}
+.hi-name{font-weight:700;font-size:.95em}
+.hi-meta{font-size:.78em;color:#5070a0;margin-top:3px}
+.hi-sections{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.hi-tag{background:rgba(30,127,217,0.12);border:1px solid rgba(30,127,217,0.2);border-radius:50px;padding:2px 9px;font-size:.7em;color:var(--sky)}
+.hi-actions{display:flex;gap:8px}
+.btn-view{background:rgba(30,127,217,0.15);border:1px solid rgba(30,127,217,0.3);color:var(--sky);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:.8em;font-weight:700;font-family:'Nunito',sans-serif;transition:all .3s}
+.btn-view:hover{background:rgba(30,127,217,0.3)}
+.btn-delete{background:rgba(216,90,48,0.1);border:1px solid rgba(216,90,48,0.25);color:#f0a080;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:.8em;font-weight:700;font-family:'Nunito',sans-serif;transition:all .3s}
+.btn-delete:hover{background:rgba(216,90,48,0.25)}
+
+/* ===== NAV TABS ===== */
+.nav-tabs{display:flex;gap:4px;background:var(--card);border-radius:12px;padding:5px;margin-bottom:28px;border:1px solid var(--border)}
+.ntab{flex:1;padding:11px 8px;border:none;background:transparent;color:#4060a0;font-weight:700;font-size:.85em;cursor:pointer;border-radius:8px;transition:all .3s;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px}
+.ntab.active{background:linear-gradient(135deg,var(--blue),var(--teal));color:white;box-shadow:0 2px 12px rgba(30,127,217,0.35)}
+.ntab:hover:not(.active){color:#a0c4e8;background:rgba(255,255,255,0.05)}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:24px;right:24px;background:rgba(29,158,117,0.95);border-radius:12px;padding:14px 20px;font-weight:700;font-size:.9em;color:white;z-index:9999;transform:translateY(100px);opacity:0;transition:all .4s;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.error{background:rgba(216,90,48,0.95)}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,0.03)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:10px}
+@media(max-width:600px){.main{padding:16px};.steps-bar{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">📊</div>
+    <div class="topbar-title">OPCVM <span>Academy</span> · Reporting</div>
+    <div class="topbar-right">
+      <span class="user-chip" id="userChip">👤 Admin</span>
+      <a href="OPCVM.html" class="btn-back-home">← Accueil</a>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- NAV TABS -->
+    <div class="nav-tabs">
+      <button class="ntab active" id="ntab-new" onclick="switchNav('new')">✨ Nouveau Dashboard</button>
+      <button class="ntab" id="ntab-history" onclick="switchNav('history')">🗂️ Historique</button>
+    </div>
+
+    <!-- ===== PANEL : NOUVEAU ===== -->
+    <div class="panel active" id="panel-new">
+
+      <!-- Steps bar -->
+      <div class="steps-bar">
+        <div class="step active" id="step1"><span class="step-num">📁</span><span class="step-label">1. Upload</span></div>
+        <div class="step" id="step2"><span class="step-num">☑️</span><span class="step-label">2. Sections</span></div>
+        <div class="step" id="step3"><span class="step-num">⚡</span><span class="step-label">3. Génération</span></div>
+        <div class="step" id="step4"><span class="step-num">🏆</span><span class="step-label">4. Dashboard</span></div>
+      </div>
+
+      <!-- ÉTAPE 1 : UPLOAD -->
+      <div id="pane-upload" class="pane">
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept="*/*" onchange="handleFile(this.files[0])"/>
+          <span class="upload-icon">📂</span>
+          <div class="upload-title">Glissez votre document ici</div>
+          <div class="upload-sub">ou cliquez pour parcourir</div>
+          <div class="file-types">
+            <span class="ftype">📊 Excel</span>
+            <span class="ftype">📄 PDF</span>
+            <span class="ftype">🖼️ Image</span>
+            <span class="ftype">📋 CSV</span>
+            <span class="ftype">📝 Word</span>
+          </div>
+        </div>
+        <div class="upload-preview" id="uploadPreview">
+          <div class="preview-icon" id="previewIcon">📄</div>
+          <div class="preview-info">
+            <div class="preview-name" id="previewName">—</div>
+            <div class="preview-size" id="previewSize">—</div>
+          </div>
+          <button class="btn-analyze" id="btnAnalyze" onclick="analyzeDocument()">
+            🔍 Analyser le document
+          </button>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 2 : SECTIONS -->
+      <div id="pane-sections" class="pane" style="display:none">
+        <div class="sections-header">
+          <h2>☑️ Choisissez les sections à inclure</h2>
+          <p>Cochez les sections que vous souhaitez voir apparaître dans votre tableau de bord</p>
+        </div>
+        <div class="sections-actions">
+          <button class="btn-all" onclick="selectAll(true)">✅ Tout sélectionner</button>
+          <button class="btn-none" onclick="selectAll(false)">☐ Tout désélectionner</button>
+        </div>
+        <div class="sections-grid" id="sectionsGrid"></div>
+        <div style="text-align:center">
+          <button class="btn-generate" id="btnGenerate" onclick="generateDashboard()">
+            ✨ Générer le tableau de bord
+          </button>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 3 : LOADING -->
+      <div id="pane-loading" class="pane" style="display:none">
+        <div class="loading-wrap">
+          <div class="loading-spinner"></div>
+          <div class="loading-msg" id="loadingMsg">🤖 Analyse du document en cours...</div>
+          <div class="loading-sub" id="loadingSub">Claude génère votre tableau de bord premium</div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 4 : DASHBOARD -->
+      <div id="pane-dashboard" class="pane" style="display:none">
+        <div class="dashboard-actions">
+          <h3>✅ Tableau de bord généré</h3>
+          <button class="btn-new" onclick="resetToUpload()">🔄 Nouveau</button>
+          <button class="btn-save" onclick="saveDashboard()">💾 Sauvegarder</button>
+          <button class="btn-send" onclick="toggleMailRow()">📧 Envoyer par mail</button>
+        </div>
+        <div class="mail-row" id="mailRow">
+          <label>📧 Destinataire :</label>
+          <input type="email" class="mail-input" id="mailTo" placeholder="destinataire@email.com"/>
+          <button class="btn-open-outlook" onclick="sendOutlook()">Ouvrir dans Outlook →</button>
+        </div>
+        <div class="dashboard-frame">
+          <iframe id="dashboardFrame" title="Tableau de bord"></iframe>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== PANEL : HISTORIQUE ===== -->
+    <div class="panel" id="panel-history">
+      <div class="history-header">
+        <h2>🗂️ Historique des tableaux de bord</h2>
+        <button class="btn-all" onclick="loadHistory()" style="margin-left:auto">🔄 Actualiser</button>
+      </div>
+      <div id="historyList"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CONFIG =====
+const SB_URL = 'https://ypnpcltspzzmizlwddsm.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwbnBjbHRzcHp6bWl6bHdkZHNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NTA3NTcsImV4cCI6MjA5NzUyNjc1N30.jIcl7wJ7JAImdg-BNYOFxoaTKCPQwczLAwMDvCLHdp4';
+
+let currentFile = null;
+let currentFileB64 = null;
+let currentFileMime = null;
+let detectedSections = [];
+let generatedHTML = '';
+let currentUser = JSON.parse(sessionStorage.getItem('opcvm_user') || 'null');
+
+// Check auth
+if (!currentUser || currentUser.role !== 'admin') {
+  window.location.href = 'OPCVM.html';
+}
+document.getElementById('userChip').textContent = '👤 ' + (currentUser?.full_name || 'Admin');
+
+// ===== SUPABASE =====
+async function sbFetch(path, opts = {}) {
+  const res = await fetch(SB_URL + path, {
+    ...opts,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      ...(opts.headers || {})
+    }
+  });
+  if (res.status === 204) return {};
+  return res.json();
+}
+
+// ===== NAV =====
+function switchNav(tab) {
+  document.querySelectorAll('.ntab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('ntab-' + tab).classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+  if (tab === 'history') loadHistory();
+}
+
+// ===== STEPS =====
+function setStep(n) {
+  ['step1','step2','step3','step4'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.classList.remove('active','done');
+    if (i+1 < n) el.classList.add('done');
+    if (i+1 === n) el.classList.add('active');
+  });
+  ['pane-upload','pane-sections','pane-loading','pane-dashboard'].forEach((id,i) => {
+    document.getElementById(id).style.display = (i+1 === n) ? 'block' : 'none';
+  });
+}
+
+// ===== FILE HANDLING =====
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
+uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+function getFileIcon(type, name) {
+  if (type.includes('image')) return '🖼️';
+  if (type.includes('pdf')) return '📄';
+  if (type.includes('spreadsheet') || name.endsWith('.xlsx') || name.endsWith('.xls') || name.endsWith('.csv')) return '📊';
+  if (type.includes('word') || name.endsWith('.docx')) return '📝';
+  return '📁';
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' o';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' Ko';
+  return (bytes/(1024*1024)).toFixed(1) + ' Mo';
+}
+
+function handleFile(file) {
+  if (!file) return;
+  currentFile = file;
+  currentFileMime = file.type || 'application/octet-stream';
+  document.getElementById('previewIcon').textContent = getFileIcon(currentFileMime, file.name);
+  document.getElementById('previewName').textContent = file.name;
+  document.getElementById('previewSize').textContent = formatSize(file.size) + ' · ' + (file.type || 'inconnu');
+  document.getElementById('uploadPreview').classList.add('show');
+
+  const reader = new FileReader();
+  reader.onload = e => { currentFileB64 = e.target.result.split(',')[1]; };
+  reader.readAsDataURL(file);
+}
+
+// ===== ANALYZE =====
+async function analyzeDocument() {
+  if (!currentFile || !currentFileB64) { showToast('Veuillez sélectionner un fichier', true); return; }
+  setStep(3);
+  document.getElementById('loadingMsg').textContent = '🔍 Analyse des sections du document...';
+  document.getElementById('loadingSub').textContent = 'Claude identifie les sections disponibles';
+
+  try {
+    const isImage = currentFileMime.startsWith('image/');
+    const isPDF = currentFileMime === 'application/pdf';
+
+    let messages;
+    if (isImage || isPDF) {
+      messages = [{
+        role: 'user',
+        content: [
+          {
+            type: isImage ? 'image' : 'document',
+            source: { type: 'base64', media_type: currentFileMime, data: currentFileB64 }
+          },
+          {
+            type: 'text',
+            text: `Analyse ce document et identifie toutes les sections/blocs distincts qu'il contient.
+Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks, avec ce format exact :
+{"sections": [{"id": "s1", "name": "Nom de la section", "description": "Brève description du contenu", "data_type": "tableau|graphique|kpi|texte"}, ...]}
+Identifie chaque section séparée du document. Sois précis sur les noms.`
+          }
+        ]
+      }];
+    } else {
+      messages = [{
+        role: 'user',
+        content: `Je t'envoie un document encodé en base64 (${currentFile.name}). Analyse son contenu et identifie toutes les sections/blocs distincts.
+Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks :
+{"sections": [{"id": "s1", "name": "Nom de la section", "description": "Brève description", "data_type": "tableau|graphique|kpi|texte"}]}
+Données base64 : ${currentFileB64.substring(0, 2000)}...`
+      }];
+    }
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, messages })
+    });
+    const data = await resp.json();
+    const raw = data.content[0].text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(raw);
+    detectedSections = parsed.sections || [];
+    renderSections();
+    setStep(2);
+  } catch(e) {
+    showToast('Erreur lors de l\'analyse : ' + e.message, true);
+    setStep(1);
+  }
+}
+
+// ===== SECTIONS =====
+function renderSections() {
+  const grid = document.getElementById('sectionsGrid');
+  grid.innerHTML = '';
+  detectedSections.forEach((s, i) => {
+    const icons = { tableau: '📋', graphique: '📈', kpi: '🎯', texte: '📝' };
+    const div = document.createElement('div');
+    div.className = 'section-item checked';
+    div.id = 'si-' + i;
+    div.onclick = () => toggleSection(i);
+    div.innerHTML = `
+      <div class="section-check" id="sc-${i}">✓</div>
+      <div style="flex:1">
+        <div class="section-name">${icons[s.data_type]||'📄'} ${s.name}</div>
+        <div class="section-detail">${s.description}</div>
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+function toggleSection(i) {
+  const item = document.getElementById('si-' + i);
+  const check = document.getElementById('sc-' + i);
+  item.classList.toggle('checked');
+  check.textContent = item.classList.contains('checked') ? '✓' : '';
+}
+
+function selectAll(val) {
+  detectedSections.forEach((_, i) => {
+    const item = document.getElementById('si-' + i);
+    const check = document.getElementById('sc-' + i);
+    if (val) { item.classList.add('checked'); check.textContent = '✓'; }
+    else { item.classList.remove('checked'); check.textContent = ''; }
+  });
+}
+
+function getSelectedSections() {
+  return detectedSections.filter((_, i) => document.getElementById('si-' + i)?.classList.contains('checked'));
+}
+
+// ===== GENERATE DASHBOARD =====
+async function generateDashboard() {
+  const selected = getSelectedSections();
+  if (selected.length === 0) { showToast('Sélectionnez au moins une section', true); return; }
+
+  setStep(3);
+  document.getElementById('loadingMsg').textContent = '✨ Génération du tableau de bord...';
+  document.getElementById('loadingSub').textContent = 'Claude crée votre dashboard premium style PowerBI';
+
+  try {
+    const isImage = currentFileMime.startsWith('image/');
+    const isPDF = currentFileMime === 'application/pdf';
+    const sectionsNames = selected.map(s => s.name).join(', ');
+
+    const prompt = `Tu es un expert en data visualisation et design premium.
+Analyse ce document et génère un tableau de bord HTML complet, autonome et spectaculaire style PowerBI/Bloomberg.
+
+SECTIONS À INCLURE UNIQUEMENT : ${sectionsNames}
+
+EXIGENCES STRICTES :
+- HTML complet autonome (tout inline : CSS + JS + données)
+- Design sombre premium : fond #0d1628, cards #151f35, accents or/teal/bleu
+- Police : system-ui ou Segoe UI
+- KPIs en haut avec grandes valeurs colorées et animations
+- Graphiques avec Chart.js (CDN: https://cdn.jsdelivr.net/npm/chart.js)
+- Camemberts, barres, donuts animés avec les vraies données du document
+- Tableaux stylisés avec hover effects
+- Responsive, padding généreux
+- Titres en français
+- Effet WOW : animations d'entrée, gradients, ombres, cartes avec glassmorphism
+- En-tête avec titre du document et date de génération
+
+Réponds UNIQUEMENT avec le code HTML complet, sans aucun texte avant ou après, sans markdown.`;
+
+    let messages;
+    if (isImage || isPDF) {
+      messages = [{
+        role: 'user',
+        content: [
+          { type: isImage ? 'image' : 'document', source: { type: 'base64', media_type: currentFileMime, data: currentFileB64 } },
+          { type: 'text', text: prompt }
+        ]
+      }];
+    } else {
+      messages = [{ role: 'user', content: prompt + '\n\nDonnées du fichier (base64): ' + currentFileB64.substring(0, 3000) }];
+    }
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 8000, messages })
+    });
+    const data = await resp.json();
+    generatedHTML = data.content[0].text.replace(/^```html\n?|^```\n?|```$/gm, '').trim();
+
+    // Display in iframe
+    const iframe = document.getElementById('dashboardFrame');
+    iframe.srcdoc = generatedHTML;
+    setStep(4);
+    showToast('✅ Tableau de bord généré avec succès !');
+  } catch(e) {
+    showToast('Erreur génération : ' + e.message, true);
+    setStep(2);
+  }
+}
+
+// ===== MAIL =====
+function toggleMailRow() {
+  const row = document.getElementById('mailRow');
+  row.classList.toggle('show');
+}
+
+function sendOutlook() {
+  const to = document.getElementById('mailTo').value.trim();
+  if (!to) { showToast('Saisissez une adresse email', true); return; }
+
+  const subject = encodeURIComponent('Tableau de bord — ' + (currentFile?.name || 'Document'));
+  const body = encodeURIComponent(
+    'Bonjour,\n\nVeuillez trouver ci-joint votre tableau de bord.\n\nCordialement,\n' +
+    (currentUser?.full_name || 'Nexus Academy')
+  );
+
+  // Create downloadable HTML file and open mailto
+  const blob = new Blob([generatedHTML], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'dashboard.html';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  setTimeout(() => {
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+    showToast('📧 Outlook ouvert — attachez le fichier téléchargé');
+  }, 500);
+}
+
+// ===== SAVE =====
+async function saveDashboard() {
+  const selected = getSelectedSections();
+  try {
+    await sbFetch('/rest/v1/dashboards', {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: currentUser.id,
+        filename: currentFile?.name || 'document',
+        sections_included: selected.map(s => s.name),
+        html_preview: generatedHTML.substring(0, 5000)
+      })
+    });
+    showToast('💾 Dashboard sauvegardé dans l\'historique !');
+  } catch(e) {
+    showToast('Erreur sauvegarde', true);
+  }
+}
+
+// ===== HISTORY =====
+async function loadHistory() {
+  const list = document.getElementById('historyList');
+  list.innerHTML = '<div class="loading-wrap"><div class="loading-spinner"></div></div>';
+  try {
+    const data = await sbFetch(`/rest/v1/dashboards?user_id=eq.${currentUser.id}&order=created_at.desc&select=*`);
+    if (!data || data.length === 0) {
+      list.innerHTML = `<div class="history-empty"><span class="history-empty-icon">🗂️</span>Aucun tableau de bord sauvegardé</div>`;
+      return;
+    }
+    list.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'history-grid';
+    data.forEach(item => {
+      const date = new Date(item.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' });
+      const tags = (item.sections_included || []).map(s => `<span class="hi-tag">${s}</span>`).join('');
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      div.innerHTML = `
+        <div class="hi-icon">📊</div>
+        <div class="hi-info">
+          <div class="hi-name">📁 ${item.filename}</div>
+          <div class="hi-meta">🕐 ${date}</div>
+          <div class="hi-sections">${tags}</div>
+        </div>
+        <div class="hi-actions">
+          ${item.html_preview ? `<button class="btn-view" onclick="viewHistory('${item.id}')">👁️ Voir</button>` : ''}
+          <button class="btn-delete" onclick="deleteHistory('${item.id}', this)">🗑️</button>
+        </div>`;
+      grid.appendChild(div);
+    });
+    list.appendChild(grid);
+  } catch(e) {
+    list.innerHTML = '<div class="history-empty">Erreur de chargement</div>';
+  }
+}
+
+async function viewHistory(id) {
+  const data = await sbFetch(`/rest/v1/dashboards?id=eq.${id}&select=html_preview`);
+  if (data && data[0]?.html_preview) {
+    generatedHTML = data[0].html_preview;
+    switchNav('new');
+    setStep(4);
+    document.getElementById('dashboardFrame').srcdoc = generatedHTML;
+  }
+}
+
+async function deleteHistory(id, btn) {
+  if (!confirm('Supprimer ce tableau de bord ?')) return;
+  await sbFetch(`/rest/v1/dashboards?id=eq.${id}`, { method: 'DELETE' });
+  btn.closest('.history-item').remove();
+  showToast('🗑️ Tableau de bord supprimé');
+}
+
+function resetToUpload() {
+  currentFile = null; currentFileB64 = null; generatedHTML = '';
+  document.getElementById('uploadPreview').classList.remove('show');
+  document.getElementById('fileInput').value = '';
+  document.getElementById('mailRow').classList.remove('show');
+  setStep(1);
+}
+
+// ===== TOAST =====
+function showToast(msg, error = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (error ? ' error' : '');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// Init
+setStep(1);
+</script>
+</body>
+</html>
