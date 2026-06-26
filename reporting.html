@@ -275,13 +275,18 @@ let currentFileB64 = null;
 let currentFileMime = null;
 let detectedSections = [];
 let generatedHTML = '';
-let currentUser = JSON.parse(localStorage.getItem('opcvm_user') || 'null');
+let currentUser = null;
+try {
+  const stored = localStorage.getItem('opcvm_user');
+  if (stored) currentUser = JSON.parse(stored);
+} catch(e) { currentUser = null; }
 
-// Check auth
-if (!currentUser) {
+// Check auth - if not logged in, redirect
+if (!currentUser || !currentUser.id) {
   window.location.href = 'OPCVM.html';
+} else {
+  document.getElementById('userChip').textContent = '👤 ' + (currentUser.full_name || 'Utilisateur');
 }
-document.getElementById('userChip').textContent = '👤 ' + (currentUser?.full_name || 'Admin');
 
 // ===== SUPABASE =====
 async function sbFetch(path, opts = {}) {
