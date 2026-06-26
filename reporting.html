@@ -118,7 +118,6 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
 ::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:10px}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -204,11 +203,7 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
       <div class="mail-row" id="mailRow">
         <label for="mailTo">📧 Destinataire :</label>
         <input type="email" id="mailTo" class="mail-input" placeholder="email@exemple.com">
-        <button class="btn-outlook" onclick="doSendPDF()" id="btnPDF">📄 Générer PDF + Outlook →</button>
-      </div>
-      <div id="pdfProgress" style="display:none;background:#151f35;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 18px;margin-bottom:14px;font-size:.85em;color:#a0c4e8;display:none;align-items:center;gap:10px">
-        <div class="spinner" style="width:20px;height:20px;border-width:3px;flex-shrink:0"></div>
-        <span id="pdfMsg">Génération du PDF en cours...</span>
+        <button class="btn-outlook" onclick="doSendMail()">Ouvrir Outlook →</button>
       </div>
       <div class="dash-frame">
         <iframe id="dashFrame" title="Tableau de bord"></iframe>
@@ -407,62 +402,17 @@ function toggleMail() {
   row.className = row.className.indexOf('show') >= 0 ? 'mail-row' : 'mail-row show';
 }
 
-function doSendPDF() {
+function doSendMail() {
   var to = document.getElementById('mailTo').value.trim();
   if (!to) { toast('Saisissez une adresse email', true); return; }
-  if (!generatedHTML) { toast('Aucun dashboard à exporter', true); return; }
-
-  var btn = document.getElementById('btnPDF');
-  btn.disabled = true;
-  btn.textContent = '⏳ Génération PDF...';
-
-  // Open dashboard in new window and print as PDF
-  var win = window.open('', '_blank', 'width=1280,height=900');
-  win.document.write(generatedHTML);
-  win.document.close();
-
-  // Wait for content + charts to render
-  setTimeout(function() {
-    var pdfName = (savedFilename || 'dashboard').replace(/\.[^/.]+$/, '') + '_dashboard.pdf';
-    
-    // Use html2pdf on the new window document body
-    var opt = {
-      margin: 5,
-      filename: pdfName,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { 
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
-        windowWidth: 1280
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-    };
-
-    html2pdf().set(opt).from(win.document.body).save().then(function() {
-      win.close();
-      btn.disabled = false;
-      btn.textContent = '📄 Générer PDF + Outlook →';
-      
-      var subj = encodeURIComponent('Tableau de bord — ' + (savedFilename || 'Document'));
-      var body = encodeURIComponent('Bonjour,
-
-Veuillez trouver ci-joint votre tableau de bord en PDF.
-
-Cordialement,
-' + (currentUser ? currentUser.full_name : 'Nexus Academy'));
-      setTimeout(function() {
-        window.location.href = 'mailto:' + to + '?subject=' + subj + '&body=' + body;
-        toast('✅ PDF téléchargé ! Attachez-le dans Outlook.');
-      }, 500);
-    }).catch(function(e) {
-      win.close();
-      btn.disabled = false;
-      btn.textContent = '📄 Générer PDF + Outlook →';
-      toast('Erreur PDF : ' + e.message, true);
-    });
-  }, 2500);
+  var blob = new Blob([generatedHTML], { type: 'text/html' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'dashboard.html'; a.click();
+  URL.revokeObjectURL(url);
+  var subj = encodeURIComponent('Tableau de bord — ' + savedFilename);
+  var body = encodeURIComponent('Bonjour,\n\nVeuillez trouver ci-joint votre tableau de bord.\n\nCordialement,\n' + (currentUser ? currentUser.full_name : ''));
+  setTimeout(function() { window.location.href = 'mailto:' + to + '?subject=' + subj + '&body=' + body; toast('📧 Outlook ouvert — attachez le fichier téléchargé'); }, 600);
 }
 
 // ---- SAVE ----
@@ -475,7 +425,7 @@ function doSave() {
       user_id: currentUser.id,
       filename: savedFilename || 'document',
       sections_included: savedSections.length > 0 ? savedSections.map(function(s) { return s.name; }) : ['Dashboard'],
-      html_preview: generatedHTML
+      html_preview: generatedHTML.substring(0, 5000)
     })
   })
   .then(function(r) {
