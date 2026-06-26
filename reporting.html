@@ -179,7 +179,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--navy);col
       <!-- ÉTAPE 1 : UPLOAD -->
       <div id="pane-upload" class="pane">
         <div class="upload-zone" id="uploadZone">
-          <input type="file" id="fileInput" accept="*/*" onchange="handleFile(this.files[0])"/>
+          <input type="file" id="fileInput" accept="*/*" onchange="handleFile(this.files[0])" aria-label="Sélectionner un document à analyser"/>
           <span class="upload-icon">📂</span>
           <div class="upload-title">Glissez votre document ici</div>
           <div class="upload-sub">ou cliquez pour parcourir</div>
@@ -239,8 +239,8 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--navy);col
           <button class="btn-send" onclick="toggleMailRow()">📧 Envoyer par mail</button>
         </div>
         <div class="mail-row" id="mailRow">
-          <label>📧 Destinataire :</label>
-          <input type="email" class="mail-input" id="mailTo" placeholder="destinataire@email.com"/>
+          <label for="mailTo">📧 Destinataire :</label>
+          <input type="email" class="mail-input" id="mailTo" placeholder="destinataire@email.com" aria-label="Adresse email du destinataire"/>
           <button class="btn-open-outlook" onclick="sendOutlook()">Ouvrir dans Outlook →</button>
         </div>
         <div class="dashboard-frame">
@@ -275,6 +275,8 @@ let currentFileB64 = null;
 let currentFileMime = null;
 let detectedSections = [];
 let generatedHTML = '';
+let savedSections = [];
+let savedFilename = '';
 let currentUser = null;
 
 window.addEventListener('load', function() {
@@ -468,6 +470,10 @@ async function generateDashboard() {
   const selected = getSelectedSections();
   if (selected.length === 0) { showToast('Sélectionnez au moins une section', true); return; }
 
+  // Save for later use in saveDashboard
+  savedSections = selected;
+  savedFilename = currentFile?.name || 'document';
+
   setStep(3);
   document.getElementById('loadingMsg').textContent = '✨ Génération du tableau de bord...';
   document.getElementById('loadingSub').textContent = 'Claude crée votre dashboard premium style PowerBI';
@@ -562,20 +568,25 @@ function sendOutlook() {
 
 // ===== SAVE =====
 async function saveDashboard() {
-  const selected = getSelectedSections();
+  if (!generatedHTML) { showToast('Aucun dashboard à sauvegarder', true); return; }
   try {
-    await sbFetch('/rest/v1/dashboards', {
+    const result = await sbFetch('/rest/v1/dashboards', {
       method: 'POST',
+      headers: { 'Prefer': 'return=representation' },
       body: JSON.stringify({
         user_id: currentUser.id,
-        filename: currentFile?.name || 'document',
-        sections_included: selected.map(s => s.name),
+        filename: savedFilename || 'document',
+        sections_included: savedSections.length > 0 ? savedSections.map(s => s.name) : ['Dashboard'],
         html_preview: generatedHTML.substring(0, 5000)
       })
     });
-    showToast('💾 Dashboard sauvegardé dans l\'historique !');
+    if (result && (Array.isArray(result) ? result.length > 0 : result.id)) {
+      showToast('💾 Dashboard sauvegardé dans l'historique !');
+    } else {
+      showToast('Erreur sauvegarde : ' + JSON.stringify(result), true);
+    }
   } catch(e) {
-    showToast('Erreur sauvegarde', true);
+    showToast('Erreur sauvegarde : ' + e.message, true);
   }
 }
 
