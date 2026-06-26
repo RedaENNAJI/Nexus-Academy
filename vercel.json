@@ -1,19 +1,13 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "OPCVM.html",
-      "use": "@vercel/static"
-    }
+    { "src": "OPCVM.html", "use": "@vercel/static" },
+    { "src": "reporting.html", "use": "@vercel/static" }
   ],
   "routes": [
-    {
-      "src": "/",
-      "dest": "/OPCVM.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/OPCVM.html"
-    }
+    { "src": "/reporting.html", "dest": "/reporting.html" },
+    { "src": "/reporting", "dest": "/reporting.html" },
+    { "src": "/", "dest": "/OPCVM.html" },
+    { "src": "/(.*)", "dest": "/OPCVM.html" }
   ]
 }
