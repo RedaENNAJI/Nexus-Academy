@@ -279,23 +279,21 @@ let savedSections = [];
 let savedFilename = '';
 let currentUser = null;
 
-window.addEventListener('load', function() {
-  try {
-    const stored = localStorage.getItem('opcvm_user');
-    if (stored) currentUser = JSON.parse(stored);
-  } catch(e) { currentUser = null; }
+// Auth check runs immediately
+try {
+  const stored = localStorage.getItem('opcvm_user');
+  if (stored) currentUser = JSON.parse(stored);
+} catch(e) { currentUser = null; }
 
-  if (!currentUser || !currentUser.id) {
-    window.location.href = 'OPCVM.html';
-    return;
-  }
+if (!currentUser || !currentUser.id) {
+  window.location.href = 'OPCVM.html';
+}
 
+// Init after DOM ready
+document.addEventListener('DOMContentLoaded', function() {
   const chip = document.getElementById('userChip');
-  if (chip) chip.textContent = '👤 ' + (currentUser.full_name || 'Utilisateur');
-  
-  // Init app
+  if (chip && currentUser) chip.textContent = '👤 ' + (currentUser.full_name || 'Utilisateur');
   setStep(1);
-  loadHistory();
 });
 
 // ===== SUPABASE =====
