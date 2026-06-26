@@ -289,11 +289,10 @@ if (!currentUser || !currentUser.id) {
   window.location.href = 'OPCVM.html';
 }
 
-// Init after DOM ready
+// Set username chip
 document.addEventListener('DOMContentLoaded', function() {
   const chip = document.getElementById('userChip');
   if (chip && currentUser) chip.textContent = '👤 ' + (currentUser.full_name || 'Utilisateur');
-  setStep(1);
 });
 
 // ===== SUPABASE =====
@@ -658,6 +657,9 @@ function showToast(msg, error = false) {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
+
+// Init
+setStep(1);
 </script>
 </body>
 </html>
