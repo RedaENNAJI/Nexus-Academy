@@ -23,19 +23,13 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
 .panel{display:none}
 .panel.active{display:block;animation:fadein .3s}
 @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* Steps */
 .steps{display:flex;background:#151f35;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08);margin-bottom:28px}
 .step{flex:1;padding:12px 8px;text-align:center;font-size:.75em;font-weight:700;color:#3a5080;transition:all .3s}
 .step.active{background:linear-gradient(135deg,rgba(30,127,217,.25),rgba(29,158,117,.15));color:#f5c518}
 .step.done{color:#1d9e75}
 .step span{display:block;font-size:1.5em;margin-bottom:2px}
-
-/* Panes */
 .pane{display:none}
 .pane.active{display:block;animation:fadein .3s}
-
-/* Upload */
 .upload-zone{border:2px dashed rgba(30,127,217,.4);border-radius:16px;padding:50px 30px;text-align:center;cursor:pointer;transition:all .3s;background:rgba(30,127,217,.04);position:relative;overflow:hidden}
 .upload-zone:hover{border-color:#f5c518;background:rgba(245,197,24,.04)}
 .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
@@ -51,8 +45,6 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
 .btn-primary{background:linear-gradient(135deg,#1e7fd9,#1d9e75);color:white;border:none;border-radius:50px;padding:12px 32px;font-weight:800;font-size:.92em;cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif;display:inline-block;margin-top:20px}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,127,217,.4)}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
-
-/* Sections */
 .sec-header h2{font-family:'Poppins',sans-serif;font-size:1.1em;font-weight:700;margin-bottom:4px}
 .sec-header p{color:#5070a0;font-size:.85em;margin-bottom:16px}
 .sec-actions{display:flex;gap:8px;margin-bottom:14px}
@@ -69,15 +61,11 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
 .sec-desc{font-size:.72em;color:#4060a0;margin-top:1px}
 .btn-generate{background:linear-gradient(135deg,#f5c518,#e8a800);color:#0d1628;border:none;border-radius:50px;padding:13px 38px;font-weight:900;font-size:.95em;cursor:pointer;transition:all .3s;font-family:'Nunito',sans-serif;display:block;margin:0 auto}
 .btn-generate:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,197,24,.4)}
-
-/* Loading */
 .loading{text-align:center;padding:60px 20px}
 .spinner{width:50px;height:50px;border:4px solid rgba(255,255,255,.1);border-top-color:#f5c518;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading h3{color:#a0c4e8;font-size:1em;margin-bottom:6px}
 .loading p{color:#4060a0;font-size:.85em}
-
-/* Dashboard */
 .dash-actions{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .dash-actions h3{font-family:'Poppins',sans-serif;font-size:1em;font-weight:700;flex:1}
 .btn-save{background:linear-gradient(135deg,#1d9e75,#0f6e56);color:white;border:none;border-radius:8px;padding:9px 20px;font-weight:700;font-size:.85em;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:6px;transition:all .3s}
@@ -94,8 +82,6 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
 .btn-outlook{background:linear-gradient(135deg,#0078d4,#005a9e);color:white;border:none;border-radius:8px;padding:9px 18px;font-weight:700;font-size:.85em;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap}
 .dash-frame{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
 .dash-frame iframe{width:100%;min-height:680px;border:none;display:block}
-
-/* History */
 .hist-empty{text-align:center;padding:60px;color:#3a5080}
 .hist-empty span{font-size:48px;display:block;margin-bottom:12px;opacity:.4}
 .hist-list{display:flex;flex-direction:column;gap:10px}
@@ -108,12 +94,9 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
 .hi-tag{background:rgba(30,127,217,.12);border:1px solid rgba(30,127,217,.2);border-radius:50px;padding:2px 8px;font-size:.68em;color:#4db8e8}
 .btn-view{background:rgba(30,127,217,.15);border:1px solid rgba(30,127,217,.3);color:#4db8e8;border-radius:7px;padding:6px 12px;cursor:pointer;font-size:.78em;font-weight:700;font-family:'Nunito',sans-serif}
 .btn-del{background:rgba(216,90,48,.1);border:1px solid rgba(216,90,48,.25);color:#f0a080;border-radius:7px;padding:6px 10px;cursor:pointer;font-size:.78em;font-weight:700;font-family:'Nunito',sans-serif}
-
-/* Toast */
 .toast{position:fixed;bottom:24px;right:24px;background:rgba(29,158,117,.95);border-radius:10px;padding:12px 18px;font-weight:700;font-size:.88em;color:white;z-index:9999;transform:translateY(80px);opacity:0;transition:all .4s;box-shadow:0 6px 24px rgba(0,0,0,.4)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.err{background:rgba(216,90,48,.95)}
-
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:10px}
@@ -134,7 +117,6 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
     <button class="ntab" id="nt-history" onclick="switchNav('history')">🗂️ Historique</button>
   </div>
 
-  <!-- NOUVEAU -->
   <div class="panel active" id="panel-new">
     <div class="steps">
       <div class="step active" id="st1"><span>📁</span>1. Upload</div>
@@ -143,7 +125,6 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
       <div class="step" id="st4"><span>🏆</span>4. Dashboard</div>
     </div>
 
-    <!-- PANE 1: UPLOAD -->
     <div class="pane active" id="pn1">
       <div class="upload-zone" id="dropZone">
         <input type="file" id="fileInput" accept="*/*" aria-label="Choisir un fichier">
@@ -167,7 +148,6 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
       </div>
     </div>
 
-    <!-- PANE 2: SECTIONS -->
     <div class="pane" id="pn2">
       <div class="sec-header">
         <h2>☑️ Choisissez les sections à inclure</h2>
@@ -183,7 +163,6 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
       </div>
     </div>
 
-    <!-- PANE 3: LOADING -->
     <div class="pane" id="pn3">
       <div class="loading">
         <div class="spinner"></div>
@@ -192,7 +171,6 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
       </div>
     </div>
 
-    <!-- PANE 4: DASHBOARD -->
     <div class="pane" id="pn4">
       <div class="dash-actions">
         <h3>✅ Tableau de bord généré</h3>
@@ -211,7 +189,6 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
     </div>
   </div>
 
-  <!-- HISTORIQUE -->
   <div class="panel" id="panel-history">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
       <h2 style="font-family:Poppins,sans-serif;font-size:1.1em;font-weight:700;flex:1">🗂️ Historique</h2>
@@ -227,13 +204,11 @@ body{font-family:'Nunito',sans-serif;background:#0d1628;color:#fff;min-height:10
 const SB_URL = 'https://ypnpcltspzzmizlwddsm.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwbnBjbHRzcHp6bWl6bHdkZHNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NTA3NTcsImV4cCI6MjA5NzUyNjc1N30.jIcl7wJ7JAImdg-BNYOFxoaTKCPQwczLAwMDvCLHdp4';
 
-// ---- AUTH ----
 var currentUser = null;
 try { currentUser = JSON.parse(localStorage.getItem('opcvm_user')); } catch(e){}
 if (!currentUser || !currentUser.id) { window.location.href = 'OPCVM.html'; }
 document.getElementById('userChip').textContent = '👤 ' + (currentUser ? currentUser.full_name : '');
 
-// ---- STATE ----
 var currentFile = null;
 var currentB64 = null;
 var currentMime = null;
@@ -242,7 +217,6 @@ var generatedHTML = '';
 var savedSections = [];
 var savedFilename = '';
 
-// ---- HELPERS ----
 function sbFetch(path, opts) {
   opts = opts || {};
   opts.headers = Object.assign({ apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' }, opts.headers || {});
@@ -258,14 +232,11 @@ function toast(msg, err) {
 
 function setStep(n) {
   [1,2,3,4].forEach(function(i) {
-    var s = document.getElementById('st' + i);
-    s.className = 'step' + (i === n ? ' active' : i < n ? ' done' : '');
-    var p = document.getElementById('pn' + i);
-    p.className = 'pane' + (i === n ? ' active' : '');
+    document.getElementById('st' + i).className = 'step' + (i === n ? ' active' : i < n ? ' done' : '');
+    document.getElementById('pn' + i).className = 'pane' + (i === n ? ' active' : '');
   });
 }
 
-// ---- NAV ----
 function switchNav(tab) {
   document.querySelectorAll('.ntab').forEach(function(b) { b.classList.remove('active'); });
   document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
@@ -274,7 +245,6 @@ function switchNav(tab) {
   if (tab === 'history') loadHistory();
 }
 
-// ---- FILE ----
 function fileIcon(mime, name) {
   if (mime.indexOf('image') >= 0) return '🖼️';
   if (mime.indexOf('pdf') >= 0) return '📄';
@@ -311,13 +281,11 @@ function handleFile(file) {
   reader.readAsDataURL(file);
 }
 
-// ---- ANALYZE ----
 function doAnalyze() {
   if (!currentFile || !currentB64) return;
   setStep(3);
   document.getElementById('loadMsg').textContent = '🔍 Analyse des sections...';
   document.getElementById('loadSub').textContent = 'Claude identifie le contenu';
-
   fetch(SB_URL + '/functions/v1/analyze-document', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', apikey: SB_KEY },
@@ -334,7 +302,6 @@ function doAnalyze() {
   .catch(function(e) { toast('Erreur analyse : ' + e.message, true); setStep(1); });
 }
 
-// ---- SECTIONS ----
 function renderSections() {
   var grid = document.getElementById('sectGrid');
   grid.innerHTML = '';
@@ -371,7 +338,6 @@ function getSelected() {
   });
 }
 
-// ---- GENERATE ----
 function doGenerate() {
   var selected = getSelected();
   if (selected.length === 0) { toast('Sélectionnez au moins une section', true); return; }
@@ -380,7 +346,6 @@ function doGenerate() {
   setStep(3);
   document.getElementById('loadMsg').textContent = '✨ Génération du dashboard...';
   document.getElementById('loadSub').textContent = 'Claude crée votre tableau de bord premium';
-
   fetch(SB_URL + '/functions/v1/analyze-document', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', apikey: SB_KEY },
@@ -396,7 +361,6 @@ function doGenerate() {
   .catch(function(e) { toast('Erreur génération : ' + e.message, true); setStep(2); });
 }
 
-// ---- MAIL ----
 function toggleMail() {
   var row = document.getElementById('mailRow');
   row.className = row.className.indexOf('show') >= 0 ? 'mail-row' : 'mail-row show';
@@ -415,7 +379,6 @@ function doSendMail() {
   setTimeout(function() { window.location.href = 'mailto:' + to + '?subject=' + subj + '&body=' + body; toast('📧 Outlook ouvert — attachez le fichier téléchargé'); }, 600);
 }
 
-// ---- SAVE ----
 function doSave() {
   if (!generatedHTML) { toast('Aucun dashboard à sauvegarder', true); return; }
   sbFetch('/rest/v1/dashboards', {
@@ -425,7 +388,7 @@ function doSave() {
       user_id: currentUser.id,
       filename: savedFilename || 'document',
       sections_included: savedSections.length > 0 ? savedSections.map(function(s) { return s.name; }) : ['Dashboard'],
-      html_preview: generatedHTML.substring(0, 5000)
+      html_preview: generatedHTML
     })
   })
   .then(function(r) {
@@ -438,7 +401,6 @@ function doSave() {
   .catch(function(e) { toast('Erreur : ' + e.message, true); });
 }
 
-// ---- RESET ----
 function doReset() {
   currentFile = null; currentB64 = null; generatedHTML = '';
   document.getElementById('previewBox').className = 'preview-box';
@@ -448,7 +410,6 @@ function doReset() {
   setStep(1);
 }
 
-// ---- HISTORY ----
 function loadHistory() {
   var list = document.getElementById('histList');
   list.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
@@ -463,9 +424,10 @@ function loadHistory() {
     data.forEach(function(item) {
       var date = new Date(item.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
       var tags = (item.sections_included || []).map(function(s) { return '<span class="hi-tag">' + s + '</span>'; }).join('');
+      var hasHTML = item.html_preview && item.html_preview.length > 100;
       var d = document.createElement('div');
       d.className = 'hist-item';
-      d.innerHTML = '<div style="font-size:28px">📊</div><div class="hi-info"><div class="hi-name">📁 ' + item.filename + '</div><div class="hi-meta">🕐 ' + date + '</div><div class="hi-tags">' + tags + '</div></div><div style="display:flex;gap:8px">' + (item.html_preview ? '<button class="btn-view" onclick="viewItem(\'' + item.id + '\')">👁️ Voir</button>' : '') + '<button class="btn-del" onclick="delItem(\'' + item.id + '\', this)">🗑️</button></div>';
+      d.innerHTML = '<div style="font-size:28px">📊</div><div class="hi-info"><div class="hi-name">📁 ' + item.filename + '</div><div class="hi-meta">🕐 ' + date + '</div><div class="hi-tags">' + tags + '</div></div><div style="display:flex;gap:8px">' + (hasHTML ? '<button class="btn-view" onclick="viewItem(\'' + item.id + '\')">👁️ Voir</button>' : '') + '<button class="btn-del" onclick="delItem(\'' + item.id + '\', this)">🗑️</button></div>';
       grid.appendChild(d);
     });
     list.innerHTML = '';
@@ -475,15 +437,21 @@ function loadHistory() {
 }
 
 function viewItem(id) {
-  sbFetch('/rest/v1/dashboards?id=eq.' + id + '&select=html_preview')
+  toast('⏳ Chargement...');
+  sbFetch('/rest/v1/dashboards?id=eq.' + id + '&select=html_preview,filename')
   .then(function(data) {
-    if (data && data[0] && data[0].html_preview) {
+    if (data && data[0] && data[0].html_preview && data[0].html_preview.length > 100) {
       generatedHTML = data[0].html_preview;
+      savedFilename = data[0].filename || 'document';
       switchNav('new');
       setStep(4);
       document.getElementById('dashFrame').srcdoc = generatedHTML;
+      toast('✅ Dashboard chargé !');
+    } else {
+      toast('Dashboard incomplet — veuillez le regénérer', true);
     }
-  });
+  })
+  .catch(function(e) { toast('Erreur chargement : ' + e.message, true); });
 }
 
 function delItem(id, btn) {
