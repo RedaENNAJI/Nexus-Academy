@@ -412,60 +412,57 @@ function doSendPDF() {
   if (!to) { toast('Saisissez une adresse email', true); return; }
   if (!generatedHTML) { toast('Aucun dashboard à exporter', true); return; }
 
-  // Show progress
-  var prog = document.getElementById('pdfProgress');
   var btn = document.getElementById('btnPDF');
-  prog.style.display = 'flex';
   btn.disabled = true;
-  document.getElementById('pdfMsg').textContent = 'Préparation du PDF...';
+  btn.textContent = '⏳ Génération PDF...';
 
-  // Create a hidden div with the dashboard content
-  var container = document.createElement('div');
-  container.style.cssText = 'position:fixed;left:-9999px;top:0;width:1200px;background:white;';
-  container.innerHTML = generatedHTML;
-  document.body.appendChild(container);
+  // Open dashboard in new window and print as PDF
+  var win = window.open('', '_blank', 'width=1280,height=900');
+  win.document.write(generatedHTML);
+  win.document.close();
 
-  // Wait for content to render
+  // Wait for content + charts to render
   setTimeout(function() {
-    document.getElementById('pdfMsg').textContent = 'Génération du PDF en cours...';
-    
     var pdfName = (savedFilename || 'dashboard').replace(/\.[^/.]+$/, '') + '_dashboard.pdf';
     
+    // Use html2pdf on the new window document body
     var opt = {
-      margin: [8, 8, 8, 8],
+      margin: 5,
       filename: pdfName,
-      image: { type: 'jpeg', quality: 0.95 },
+      image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { 
-        scale: 1.5, 
-        useCORS: true, 
+        scale: 2,
+        useCORS: true,
         allowTaint: true,
-        backgroundColor: '#0d1628',
-        logging: false
+        logging: false,
+        windowWidth: 1280
       },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-      pagebreak: { mode: ['avoid-all', 'css'] }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
 
-    html2pdf().set(opt).from(container).save().then(function() {
-      document.body.removeChild(container);
-      prog.style.display = 'none';
+    html2pdf().set(opt).from(win.document.body).save().then(function() {
+      win.close();
       btn.disabled = false;
-      document.getElementById('pdfMsg').textContent = '';
+      btn.textContent = '📄 Générer PDF + Outlook →';
       
-      // Open Outlook
       var subj = encodeURIComponent('Tableau de bord — ' + (savedFilename || 'Document'));
-      var body = encodeURIComponent('Bonjour,\n\nVeuillez trouver ci-joint votre tableau de bord en PDF.\n\nCordialement,\n' + (currentUser ? currentUser.full_name : 'Nexus Academy'));
+      var body = encodeURIComponent('Bonjour,
+
+Veuillez trouver ci-joint votre tableau de bord en PDF.
+
+Cordialement,
+' + (currentUser ? currentUser.full_name : 'Nexus Academy'));
       setTimeout(function() {
         window.location.href = 'mailto:' + to + '?subject=' + subj + '&body=' + body;
-        toast('✅ PDF téléchargé ! Outlook ouvert — attachez le fichier PDF.');
+        toast('✅ PDF téléchargé ! Attachez-le dans Outlook.');
       }, 500);
     }).catch(function(e) {
-      document.body.removeChild(container);
-      prog.style.display = 'none';
+      win.close();
       btn.disabled = false;
+      btn.textContent = '📄 Générer PDF + Outlook →';
       toast('Erreur PDF : ' + e.message, true);
     });
-  }, 800);
+  }, 2500);
 }
 
 // ---- SAVE ----
